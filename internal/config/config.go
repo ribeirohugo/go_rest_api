@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 const (
 	serverHostEnv = "HOST"
@@ -33,4 +36,8 @@ func Load() Config {
 			Port: os.Getenv(serverPortEnv),
 		},
 	}
+}
+
+func (c *Config) GetServerAddress() string {
+	return fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port)
 }

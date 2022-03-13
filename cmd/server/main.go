@@ -24,7 +24,9 @@ func main() {
 
 	httpServer := server.New(userService)
 
-	err = http.ListenAndServe(":8082", httpServer)
+	hostAddress := cfg.GetServerAddress()
+
+	err = http.ListenAndServe(hostAddress, httpServer)
 	if err != http.ErrServerClosed {
 		log.Printf("http server terminated unexpectedly: %v", err)
 	}

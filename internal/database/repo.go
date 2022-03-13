@@ -17,7 +17,7 @@ func NewUserRepo(db *sql.DB) *UserRepo {
 }
 
 func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (model.User, error) {
-	// Database query, etc.
+	// TODO: Add database queries here
 
 	return model.User{}, nil
 }
