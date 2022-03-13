@@ -49,8 +49,7 @@ func (s *server) GetSingleUserByEmail(w http.ResponseWriter, r *http.Request) {
 
 	output := fmt.Sprintf("User with %s email is named %s.", user.Email, user.Name)
 
-	var resp *bytes.Buffer
-	resp = bytes.NewBufferString(output)
+	resp := bytes.NewBufferString(output)
 
 	_, _ = w.Write(resp.Bytes())
 }
