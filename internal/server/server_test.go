@@ -2,12 +2,13 @@ package server
 
 import (
 	"fmt"
-	"github.com/golang/mock/gomock"
-	"github.com/ribeirohugo/golang_startup/internal/model"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
