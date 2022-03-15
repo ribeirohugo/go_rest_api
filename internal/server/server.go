@@ -11,26 +11,26 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// UserService abstracts the service layer.
-type UserService interface {
+// Service abstracts the service layer.
+type Service interface {
 	GetUserByEmail(ctx context.Context, email string) (model.User, error)
 }
 
 type server struct {
 	mux     *mux.Router
-	service UserService
+	service Service
 }
 
-func New(service UserService) *server {
+func New(service Service) *server {
 	s := &server{
 		mux:     mux.NewRouter(),
 		service: service,
 	}
 
-	s.mux.HandleFunc("/users", s.GetUser).Methods(http.MethodGet)
+	s.mux.HandleFunc("/user/{id}", s.GetUser).Methods(http.MethodGet)
 	s.mux.HandleFunc("/users", s.NewUser).Methods(http.MethodPost)
-	s.mux.HandleFunc("/users", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
-	s.mux.HandleFunc("/users", s.DeleteUser).Methods(http.MethodDelete)
+	s.mux.HandleFunc("/user/{id}", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
+	s.mux.HandleFunc("/user/{id}", s.DeleteUser).Methods(http.MethodDelete)
 
 	return s
 }

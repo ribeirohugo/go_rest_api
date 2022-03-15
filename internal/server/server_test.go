@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	emailTest = "email@domain"
 	idTest    = "00000000-0000-0000-0000-000000000000"
+	emailTest = "email@domain"
 	nameTest  = "Test"
 
 	jsonOutput = "{\"Id\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test\",\"Email\":\"email@domain\"}\n"
@@ -35,68 +35,44 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			GetUserByEmail(gomock.Any(), emailTest).
+			GetUserByEmail(gomock.Any(), idTest).
 			Return(testUser, nil).
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/users/email?email=email@domain"
+		serverURL := serverReturn.URL + "/user/" + idTest
 
 		r, _ := http.NewRequest("GET", serverURL, nil)
 		w := httptest.NewRecorder()
 
-		query := r.URL.Query()
-		query.Add("email", emailTest)
+		serverTest.ServeHTTP(w, r)
 
-		serverTest.GetUser(w, r)
-
-		assert.Equal(t, w.Code, http.StatusOK)
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		assert.Equal(t, string(w.Body.Bytes()), jsonOutput)
 	})
 
-	t.Run("Error ", func(t *testing.T) {
-		t.Run("no email query string found", func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
+	t.Run("Error GetUserByEmail", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
 
-			mockService := NewMockUserService(ctrl)
+		mockService := NewMockUserService(ctrl)
 
-			serverTest := New(mockService)
+		mockService.EXPECT().
+			GetUserByEmail(gomock.Any(), idTest).
+			Return(model.User{}, fmt.Errorf("error")).
+			Times(1)
 
-			serverReturn := httptest.NewServer(serverTest)
-			serverURL := serverReturn.URL + "/users/email"
+		serverTest := New(mockService)
 
-			r, _ := http.NewRequest("GET", serverURL, nil)
-			w := httptest.NewRecorder()
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/user/" + idTest
 
-			serverTest.GetUser(w, r)
+		r, _ := http.NewRequest("GET", serverURL, nil)
+		w := httptest.NewRecorder()
 
-			assert.Equal(t, w.Code, http.StatusBadRequest)
-		})
+		serverTest.ServeHTTP(w, r)
 
-		t.Run("GetUserByEmail", func(t *testing.T) {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			mockService := NewMockUserService(ctrl)
-
-			mockService.EXPECT().
-				GetUserByEmail(gomock.Any(), emailTest).
-				Return(model.User{}, fmt.Errorf("error")).
-				Times(1)
-
-			serverTest := New(mockService)
-
-			serverReturn := httptest.NewServer(serverTest)
-			serverURL := serverReturn.URL + "/users/email?email=email@domain"
-
-			r, _ := http.NewRequest("GET", serverURL, nil)
-			w := httptest.NewRecorder()
-
-			serverTest.GetUser(w, r)
-
-			assert.Equal(t, w.Code, http.StatusInternalServerError)
-		})
+		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
 }
