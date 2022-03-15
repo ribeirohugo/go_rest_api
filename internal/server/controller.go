@@ -10,6 +10,8 @@ import (
 
 const (
 	jsonContentType = "application/json"
+
+	userDeletedMessage = "user successfully removed"
 )
 
 func (s *server) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -73,13 +75,10 @@ func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	emails, exists := r.URL.Query()["id"]
-	if !exists || len(emails) < 1 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	vars := mux.Vars(r)
+	userID := vars["id"]
 
-	user, err := s.service.GetUserByEmail(context.Background(), emails[0])
+	err := s.service.DeleteUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -88,7 +87,7 @@ func (s *server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", jsonContentType)
 
-	err = json.NewEncoder(w).Encode(user)
+	err = json.NewEncoder(w).Encode(userDeletedMessage)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}

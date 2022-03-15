@@ -25,12 +25,12 @@ var testUser = model.User{
 	Email: emailTest,
 }
 
-func TestServer_GetSingleUserByEmail(t *testing.T) {
+func TestServer_FindUser(t *testing.T) {
 	t.Run("No error return", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mockService := NewMockUserService(ctrl)
+		mockService := NewMockService(ctrl)
 
 		serverTest := New(mockService)
 
@@ -42,7 +42,7 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 		serverReturn := httptest.NewServer(serverTest)
 		serverURL := serverReturn.URL + "/user/" + idTest
 
-		r, _ := http.NewRequest("GET", serverURL, nil)
+		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
 
 		serverTest.ServeHTTP(w, r)
@@ -56,7 +56,7 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mockService := NewMockUserService(ctrl)
+		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
 			GetUserByEmail(gomock.Any(), idTest).
@@ -68,7 +68,59 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 		serverReturn := httptest.NewServer(serverTest)
 		serverURL := serverReturn.URL + "/user/" + idTest
 
-		r, _ := http.NewRequest("GET", serverURL, nil)
+		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusInternalServerError, w.Code)
+	})
+}
+
+func TestServer_DeleteUser(t *testing.T) {
+	t.Run("Deletes user successfully", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		serverTest := New(mockService)
+
+		mockService.EXPECT().
+			DeleteUser(gomock.Any(), idTest).
+			Return(nil).
+			Times(1)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/user/" + idTest
+
+		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		assert.Contains(t, string(w.Body.Bytes()), userDeletedMessage)
+	})
+
+	t.Run("Error DeleteUser", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		mockService.EXPECT().
+			DeleteUser(gomock.Any(), idTest).
+			Return(fmt.Errorf("error")).
+			Times(1)
+
+		serverTest := New(mockService)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/user/" + idTest
+
+		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
 		w := httptest.NewRecorder()
 
 		serverTest.ServeHTTP(w, r)
