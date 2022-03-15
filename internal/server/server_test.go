@@ -48,7 +48,7 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 		query := r.URL.Query()
 		query.Add("email", emailTest)
 
-		serverTest.GetSingleUserByEmail(w, r)
+		serverTest.GetUser(w, r)
 
 		assert.Equal(t, w.Code, http.StatusOK)
 
@@ -70,7 +70,7 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 			r, _ := http.NewRequest("GET", serverURL, nil)
 			w := httptest.NewRecorder()
 
-			serverTest.GetSingleUserByEmail(w, r)
+			serverTest.GetUser(w, r)
 
 			assert.Equal(t, w.Code, http.StatusBadRequest)
 		})
@@ -94,7 +94,7 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 			r, _ := http.NewRequest("GET", serverURL, nil)
 			w := httptest.NewRecorder()
 
-			serverTest.GetSingleUserByEmail(w, r)
+			serverTest.GetUser(w, r)
 
 			assert.Equal(t, w.Code, http.StatusInternalServerError)
 		})
