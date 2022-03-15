@@ -23,7 +23,7 @@ var testUser = model.User{
 	Email: emailTest,
 }
 
-func TestClient_GetProduct(t *testing.T) {
+func TestServer_GetSingleUserByEmail(t *testing.T) {
 	t.Run("No error return", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -42,10 +42,6 @@ func TestClient_GetProduct(t *testing.T) {
 
 		r, _ := http.NewRequest("GET", serverURL, nil)
 		w := httptest.NewRecorder()
-
-		q := r.URL.Query()
-		q.Add("email", "email")
-		r.URL.RawQuery = q.Encode()
 
 		query := r.URL.Query()
 		query.Add("email", emailTest)
