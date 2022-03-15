@@ -15,6 +15,8 @@ const (
 	emailTest = "email@domain"
 	idTest    = "00000000-0000-0000-0000-000000000000"
 	nameTest  = "Test"
+
+	jsonOutput = "{\"Id\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test\",\"Email\":\"email@domain\"}\n"
 )
 
 var testUser = model.User{
@@ -50,26 +52,51 @@ func TestServer_GetSingleUserByEmail(t *testing.T) {
 
 		assert.Equal(t, w.Code, http.StatusOK)
 
-		expectedReturn := fmt.Sprintf("User with %s email is named %s.", emailTest, nameTest)
-		assert.Equal(t, string(w.Body.Bytes()), expectedReturn)
+		assert.Equal(t, string(w.Body.Bytes()), jsonOutput)
 	})
 
-	t.Run("Error return", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+	t.Run("Error ", func(t *testing.T) {
+		t.Run("no email query string found", func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-		mockService := NewMockUserService(ctrl)
+			mockService := NewMockUserService(ctrl)
 
-		serverTest := New(mockService)
+			serverTest := New(mockService)
 
-		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/users/email"
+			serverReturn := httptest.NewServer(serverTest)
+			serverURL := serverReturn.URL + "/users/email"
 
-		r, _ := http.NewRequest("GET", serverURL, nil)
-		w := httptest.NewRecorder()
+			r, _ := http.NewRequest("GET", serverURL, nil)
+			w := httptest.NewRecorder()
 
-		serverTest.GetSingleUserByEmail(w, r)
+			serverTest.GetSingleUserByEmail(w, r)
 
-		assert.Equal(t, w.Code, http.StatusBadRequest)
+			assert.Equal(t, w.Code, http.StatusBadRequest)
+		})
+
+		t.Run("GetUserByEmail", func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			mockService := NewMockUserService(ctrl)
+
+			mockService.EXPECT().
+				GetUserByEmail(gomock.Any(), emailTest).
+				Return(model.User{}, fmt.Errorf("error")).
+				Times(1)
+
+			serverTest := New(mockService)
+
+			serverReturn := httptest.NewServer(serverTest)
+			serverURL := serverReturn.URL + "/users/email?email=email@domain"
+
+			r, _ := http.NewRequest("GET", serverURL, nil)
+			w := httptest.NewRecorder()
+
+			serverTest.GetSingleUserByEmail(w, r)
+
+			assert.Equal(t, w.Code, http.StatusInternalServerError)
+		})
 	})
 }

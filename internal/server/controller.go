@@ -1,10 +1,13 @@
 package server
 
 import (
-	"bytes"
 	"context"
-	"fmt"
+	"encoding/json"
 	"net/http"
+)
+
+const (
+	jsonContentType = "application/json"
 )
 
 func (s *server) GetSingleUserByEmail(w http.ResponseWriter, r *http.Request) {
@@ -20,9 +23,11 @@ func (s *server) GetSingleUserByEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output := fmt.Sprintf("User with %s email is named %s.", user.Email, user.Name)
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", jsonContentType)
 
-	resp := bytes.NewBufferString(output)
-
-	_, _ = w.Write(resp.Bytes())
+	err = json.NewEncoder(w).Encode(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
