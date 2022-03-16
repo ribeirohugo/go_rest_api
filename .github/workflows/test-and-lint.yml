@@ -1,6 +1,6 @@
 name: Test and Lint
 on:
-  push
+  pull_request
 
 jobs:
   test-and-lint:
@@ -17,9 +17,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: tidy
         run: go mod tidy
-
-      - name: vendor
-        run: go mod vendor
 
       - name: Generate
         run: go generate ./...
