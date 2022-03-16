@@ -7,25 +7,35 @@ import (
 	"net/http"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+
+	"github.com/gorilla/mux"
 )
 
-// UserService abstracts the service layer.
-type UserService interface {
+// Service abstracts the service layer.
+type Service interface {
 	GetUserByEmail(ctx context.Context, email string) (model.User, error)
+
+	FindUser(ctx context.Context, id string) (model.User, error)
+	CreateUser(ctx context.Context, user model.User) (model.User, error)
+	UpdateUser(ctx context.Context, user model.User) error
+	DeleteUser(ctx context.Context, id string) error
 }
 
 type server struct {
-	mux     *http.ServeMux
-	service UserService
+	mux     *mux.Router
+	service Service
 }
 
-func New(service UserService) *server {
+func New(service Service) *server {
 	s := &server{
-		mux:     http.NewServeMux(),
+		mux:     mux.NewRouter(),
 		service: service,
 	}
 
-	s.mux.HandleFunc("/users/email", s.GetSingleUserByEmail)
+	s.mux.HandleFunc("/user/{id}", s.GetUser).Methods(http.MethodGet)
+	s.mux.HandleFunc("/users", s.NewUser).Methods(http.MethodPost)
+	s.mux.HandleFunc("/user", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
+	s.mux.HandleFunc("/user/{id}", s.DeleteUser).Methods(http.MethodDelete)
 
 	return s
 }

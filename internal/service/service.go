@@ -31,3 +31,23 @@ func (s *Service) GetUserByEmail(ctx context.Context, email string) (model.User,
 
 	return user, nil
 }
+
+func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {
+	// TODO
+	return model.User{}, nil
+}
+
+func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, error) {
+	// TODO
+	return model.User{}, nil
+}
+
+func (s *Service) UpdateUser(ctx context.Context, user model.User) error {
+	// TODO
+	return nil
+}
+
+func (s *Service) DeleteUser(ctx context.Context, id string) error {
+	// TODO
+	return nil
+}
