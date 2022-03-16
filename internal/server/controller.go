@@ -20,7 +20,7 @@ func (s *server) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 
-	user, err := s.service.GetUserByEmail(context.Background(), userID)
+	user, err := s.service.FindUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -66,7 +66,7 @@ func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	err = s.service.UpdateUser(context.Background(), user)
+	updatedUser, err := s.service.UpdateUser(context.Background(), user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -75,7 +75,7 @@ func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", jsonContentType)
 
-	err = json.NewEncoder(w).Encode(user)
+	err = json.NewEncoder(w).Encode(updatedUser)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
