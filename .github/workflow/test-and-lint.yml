@@ -1,5 +1,4 @@
-ame: Test and Lint
-
+name: Test and Lint
 on:
   push:
     branches:
