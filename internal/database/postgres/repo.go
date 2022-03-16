@@ -7,19 +7,19 @@ import (
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
 
-func (db *Database) GetUserByEmail(ctx context.Context, email string) (model.User, error) {
+func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	rows, err := db.sql.QueryContext(ctx, `
-		SELECT id, name, email FROM users WHERE email = $1
+		SELECT id, name, email FROM users WHERE id = $1
 		LIMIT 1
-	`, email)
+	`, id)
 	if err != nil {
 		return model.User{}, err
 	}
 
-	var uid, name, emailSQL sql.NullString
+	var uid, name, email sql.NullString
 
 	for rows.Next() {
-		err = rows.Scan(&uid, &name, &email)
+		err = rows.Scan(&uid, &name, &id)
 		if err != nil {
 			return model.User{}, err
 		}
@@ -28,7 +28,7 @@ func (db *Database) GetUserByEmail(ctx context.Context, email string) (model.Use
 	user := model.User{
 		Id:    uid.String,
 		Name:  name.String,
-		Email: emailSQL.String,
+		Email: email.String,
 	}
 
 	return user, nil
