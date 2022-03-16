@@ -80,6 +80,68 @@ func TestServer_FindUser(t *testing.T) {
 	})
 }
 
+func TestServer_CreateUser(t *testing.T) {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(testUser)
+	if err != nil {
+		require.NoError(t, err)
+	}
+
+	t.Run("Create user successfully", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		serverTest := New(mockService)
+
+		mockService.EXPECT().
+			CreateUser(gomock.Any(), testUser).
+			Return(testUser, nil).
+			Times(1)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/users"
+
+		reader := bytes.NewReader(buf.Bytes())
+
+		r, _ := http.NewRequest(http.MethodPost, serverURL, reader)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		assert.Contains(t, string(w.Body.Bytes()), string(buf.Bytes()))
+	})
+
+	t.Run("Error creating user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		mockService.EXPECT().
+			CreateUser(gomock.Any(), testUser).
+			Return(model.User{}, fmt.Errorf("error")).
+			Times(1)
+
+		serverTest := New(mockService)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/users"
+
+		reader := bytes.NewReader(buf.Bytes())
+
+		r, _ := http.NewRequest(http.MethodPost, serverURL, reader)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusInternalServerError, w.Code)
+	})
+}
+
 func TestServer_UpdateUser(t *testing.T) {
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(testUser)
