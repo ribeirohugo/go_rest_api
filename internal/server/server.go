@@ -18,7 +18,7 @@ type Service interface {
 	FindUser(ctx context.Context, id string) (model.User, error)
 	FindAll(ctx context.Context) ([]model.User, error)
 	CreateUser(ctx context.Context, user model.User) (model.User, error)
-	UpdateUser(ctx context.Context, user model.User) (model.User, error)
+	UpdateUser(ctx context.Context, user model.User) error
 	DeleteUser(ctx context.Context, id string) error
 }
 
@@ -35,7 +35,7 @@ func New(service Service) *server {
 
 	s.mux.HandleFunc("/user/{id}", s.GetUser).Methods(http.MethodGet)
 	s.mux.HandleFunc("/users", s.NewUser).Methods(http.MethodPost)
-	s.mux.HandleFunc("/user/{id}", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
+	s.mux.HandleFunc("/user", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
 	s.mux.HandleFunc("/user/{id}", s.DeleteUser).Methods(http.MethodDelete)
 
 	return s

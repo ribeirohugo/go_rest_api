@@ -1,7 +1,10 @@
 package server
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +19,7 @@ const (
 	emailTest = "email@domain"
 	nameTest  = "Test"
 
-	jsonOutput = "{\"Id\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test\",\"Email\":\"email@domain\"}\n"
+	jsonOutput = "{\"id\":\"00000000-0000-0000-0000-000000000000\",\"name\":\"Test\",\"email\":\"email@domain\"}\n"
 )
 
 var testUser = model.User{
@@ -77,8 +80,70 @@ func TestServer_FindUser(t *testing.T) {
 	})
 }
 
+func TestServer_UpdateUser(t *testing.T) {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(testUser)
+	if err != nil {
+		require.NoError(t, err)
+	}
+
+	t.Run("Update user successfully", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		serverTest := New(mockService)
+
+		mockService.EXPECT().
+			UpdateUser(gomock.Any(), testUser).
+			Return(nil).
+			Times(1)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/user"
+
+		reader := bytes.NewReader(buf.Bytes())
+
+		r, _ := http.NewRequest(http.MethodPut, serverURL, reader)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		assert.Contains(t, string(w.Body.Bytes()), string(buf.Bytes()))
+	})
+
+	t.Run("Error updating user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		mockService.EXPECT().
+			UpdateUser(gomock.Any(), testUser).
+			Return(fmt.Errorf("error")).
+			Times(1)
+
+		serverTest := New(mockService)
+
+		serverReturn := httptest.NewServer(serverTest)
+		serverURL := serverReturn.URL + "/user"
+
+		reader := bytes.NewReader(buf.Bytes())
+
+		r, _ := http.NewRequest(http.MethodPut, serverURL, reader)
+		w := httptest.NewRecorder()
+
+		serverTest.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+	})
+}
+
 func TestServer_DeleteUser(t *testing.T) {
-	t.Run("Deletes user successfully", func(t *testing.T) {
+	t.Run("Delete user successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -104,7 +169,7 @@ func TestServer_DeleteUser(t *testing.T) {
 		assert.Contains(t, string(w.Body.Bytes()), userDeletedMessage)
 	})
 
-	t.Run("Error DeleteUser", func(t *testing.T) {
+	t.Run("Error deleting user", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 

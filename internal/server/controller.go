@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"github.com/ribeirohugo/golang_startup/internal/model"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -56,12 +57,16 @@ func (s *server) NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userID := vars["id"]
+	var user model.User
 
-	user, err := s.service.GetUserByEmail(context.Background(), userID)
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	err = s.service.UpdateUser(context.Background(), user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
