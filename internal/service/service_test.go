@@ -3,11 +3,12 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/ribeirohugo/golang_startup/internal/model"
-	"github.com/stretchr/testify/assert"
 	"testing"
 
+	"github.com/ribeirohugo/golang_startup/internal/model"
+
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -23,16 +24,16 @@ func TestService_GetUserByEmail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		userRepoMock := NewMockUserRepo(ctrl)
+		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(userRepoMock)
+		service := NewService(repositoryMock)
 
-		userRepoMock.EXPECT().
-			GetUserByEmail(gomock.Any(), emailTest).
+		repositoryMock.EXPECT().
+			FindUser(gomock.Any(), emailTest).
 			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
-		_, err := service.GetUserByEmail(context.Background(), emailTest)
+		_, err := service.FindUser(context.Background(), emailTest)
 		assert.Error(t, err)
 	})
 
@@ -40,16 +41,16 @@ func TestService_GetUserByEmail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		userRepoMock := NewMockUserRepo(ctrl)
+		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(userRepoMock)
+		service := NewService(repositoryMock)
 
-		userRepoMock.EXPECT().
-			GetUserByEmail(gomock.Any(), emailTest).
+		repositoryMock.EXPECT().
+			FindUser(gomock.Any(), emailTest).
 			Return(userTest, nil).
 			Times(1)
 
-		user, err := service.GetUserByEmail(context.Background(), emailTest)
+		user, err := service.FindUser(context.Background(), emailTest)
 		assert.NoError(t, err)
 		assert.Equal(t, userTest, user)
 	})
