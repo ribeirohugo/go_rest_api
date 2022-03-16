@@ -15,6 +15,9 @@ jobs:
         run: go install github.com/golang/mock/mockgen@latest
 
       - uses: actions/checkout@v2
+      - name: tidy
+        run: go mod tidy
+
       - name: vendor
         run: go mod vendor
 
