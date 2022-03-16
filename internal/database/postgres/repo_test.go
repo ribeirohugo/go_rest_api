@@ -6,9 +6,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 const emailTest = "email@domain"
@@ -29,7 +30,7 @@ func TestDatabase_GetUserByEmail(t *testing.T) {
 			Return(sqlRows, fmt.Errorf("error")).
 			Times(1)
 
-		_, err := db.GetUserByEmail(context.Background(), emailTest)
+		_, err := db.FindUser(context.Background(), emailTest)
 		assert.Error(t, err)
 	})
 }
