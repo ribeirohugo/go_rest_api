@@ -3,8 +3,9 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"github.com/ribeirohugo/golang_startup/internal/model"
 	"net/http"
+
+	"github.com/ribeirohugo/golang_startup/internal/model"
 
 	"github.com/gorilla/mux"
 )
