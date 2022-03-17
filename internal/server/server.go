@@ -13,11 +13,9 @@ import (
 
 // Service abstracts the service layer.
 type Service interface {
-	GetUserByEmail(ctx context.Context, email string) (model.User, error)
-
 	FindUser(ctx context.Context, id string) (model.User, error)
 	CreateUser(ctx context.Context, user model.User) (model.User, error)
-	UpdateUser(ctx context.Context, user model.User) error
+	UpdateUser(ctx context.Context, user model.User) (model.User, error)
 	DeleteUser(ctx context.Context, id string) error
 }
 

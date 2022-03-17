@@ -39,7 +39,7 @@ func TestServer_FindUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			GetUserByEmail(gomock.Any(), idTest).
+			FindUser(gomock.Any(), idTest).
 			Return(testUser, nil).
 			Times(1)
 
@@ -63,7 +63,7 @@ func TestServer_FindUser(t *testing.T) {
 		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
-			GetUserByEmail(gomock.Any(), idTest).
+			FindUser(gomock.Any(), idTest).
 			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
@@ -160,7 +160,7 @@ func TestServer_UpdateUser(t *testing.T) {
 
 		mockService.EXPECT().
 			UpdateUser(gomock.Any(), testUser).
-			Return(nil).
+			Return(testUser, nil).
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
@@ -186,7 +186,7 @@ func TestServer_UpdateUser(t *testing.T) {
 
 		mockService.EXPECT().
 			UpdateUser(gomock.Any(), testUser).
-			Return(fmt.Errorf("error")).
+			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
 		serverTest := New(mockService)
