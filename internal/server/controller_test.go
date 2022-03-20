@@ -56,7 +56,7 @@ func TestServer_FindUser(t *testing.T) {
 		assert.Equal(t, string(w.Body.Bytes()), jsonOutput)
 	})
 
-	t.Run("Error GetUserByEmail", func(t *testing.T) {
+	t.Run("Error GetUser", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
