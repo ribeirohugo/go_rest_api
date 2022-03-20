@@ -30,14 +30,11 @@ func New(service Service) *server {
 		service: service,
 	}
 
-	s.mux.HandleFunc("/user/{id}", s.GetUser).Methods(http.MethodGet)
-	s.mux.HandleFunc("/users", s.NewUser).Methods(http.MethodPost)
-	s.mux.HandleFunc("/user", s.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
-	s.mux.HandleFunc("/user/{id}", s.DeleteUser).Methods(http.MethodDelete)
-
 	return s
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.routing()
+
 	s.mux.ServeHTTP(w, r)
 }
