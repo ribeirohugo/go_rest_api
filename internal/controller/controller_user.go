@@ -1,4 +1,4 @@
-package server
+package controller
 
 import (
 	"context"
@@ -16,11 +16,11 @@ const (
 	userDeletedMessage = "user successfully removed"
 )
 
-func (s *server) GetUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 
-	user, err := s.service.FindUser(context.Background(), userID)
+	user, err := c.service.FindUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -35,7 +35,7 @@ func (s *server) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *server) NewUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) NewUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -43,7 +43,7 @@ func (s *server) NewUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	returnUser, err := s.service.CreateUser(context.Background(), user)
+	returnUser, err := c.service.CreateUser(context.Background(), user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -58,7 +58,7 @@ func (s *server) NewUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -66,7 +66,7 @@ func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	updatedUser, err := s.service.UpdateUser(context.Background(), user)
+	updatedUser, err := c.service.UpdateUser(context.Background(), user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -81,11 +81,11 @@ func (s *server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *server) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 
-	err := s.service.DeleteUser(context.Background(), userID)
+	err := c.service.DeleteUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

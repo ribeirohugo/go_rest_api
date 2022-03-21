@@ -1,4 +1,4 @@
-package server
+package controller
 
 import (
 	"bytes"
@@ -44,7 +44,7 @@ func TestServer_FindUser(t *testing.T) {
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user/" + idTest
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
@@ -56,7 +56,7 @@ func TestServer_FindUser(t *testing.T) {
 		assert.Equal(t, string(w.Body.Bytes()), jsonOutput)
 	})
 
-	t.Run("Error GetUserByEmail", func(t *testing.T) {
+	t.Run("Error GetUser", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -70,7 +70,7 @@ func TestServer_FindUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user/" + idTest
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
@@ -102,7 +102,7 @@ func TestServer_CreateUser(t *testing.T) {
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/users"
+		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -130,7 +130,7 @@ func TestServer_CreateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/users"
+		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -164,7 +164,7 @@ func TestServer_UpdateUser(t *testing.T) {
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user"
+		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -192,7 +192,7 @@ func TestServer_UpdateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user"
+		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -220,7 +220,7 @@ func TestServer_DeleteUser(t *testing.T) {
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user/" + idTest
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
 		w := httptest.NewRecorder()
@@ -246,7 +246,7 @@ func TestServer_DeleteUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest)
-		serverURL := serverReturn.URL + "/user/" + idTest
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
 		w := httptest.NewRecorder()
