@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/ribeirohugo/golang_startup/internal/config"
+	"github.com/ribeirohugo/golang_startup/internal/controller"
 	"github.com/ribeirohugo/golang_startup/internal/database/postgres"
-	"github.com/ribeirohugo/golang_startup/internal/server"
 	"github.com/ribeirohugo/golang_startup/internal/service"
 )
 
@@ -20,7 +20,7 @@ func main() {
 
 	userService := service.NewService(database)
 
-	httpServer := server.New(userService)
+	httpServer := controller.New(userService)
 
 	hostAddress := cfg.GetServerAddress()
 

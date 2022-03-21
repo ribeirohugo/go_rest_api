@@ -1,6 +1,6 @@
-//go:generate mockgen -package server -source=server.go -destination server_mock.go
+//go:generate mockgen -package controller -source=controller.go -destination controller_mock.go
 
-package server
+package controller
 
 import (
 	"context"
@@ -19,13 +19,13 @@ type Service interface {
 	DeleteUser(ctx context.Context, id string) error
 }
 
-type server struct {
+type Controller struct {
 	mux     *mux.Router
 	service Service
 }
 
-func New(service Service) *server {
-	s := &server{
+func New(service Service) *Controller {
+	s := &Controller{
 		mux:     mux.NewRouter(),
 		service: service,
 	}
@@ -33,8 +33,8 @@ func New(service Service) *server {
 	return s
 }
 
-func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.routing()
+func (c *Controller) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c.routing()
 
-	s.mux.ServeHTTP(w, r)
+	c.mux.ServeHTTP(w, r)
 }
