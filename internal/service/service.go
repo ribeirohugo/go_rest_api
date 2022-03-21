@@ -22,7 +22,7 @@ type Service struct {
 	repo Repository
 }
 
-func NewService(repo Repository) *Service {
+func New(repo Repository) *Service {
 	return &Service{repo: repo}
 }
 func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {

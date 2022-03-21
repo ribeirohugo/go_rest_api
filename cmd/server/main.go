@@ -18,13 +18,13 @@ func main() {
 		log.Fatalf("failed to initialise the database client: %v", err)
 	}
 
-	userService := service.NewService(database)
+	userService := service.New(database)
 
-	httpServer := controller.New(userService)
+	controllers := controller.New(userService)
 
 	hostAddress := cfg.GetServerAddress()
 
-	err = http.ListenAndServe(hostAddress, httpServer)
+	err = http.ListenAndServe(hostAddress, controllers)
 	if err != http.ErrServerClosed {
 		log.Printf("http server terminated unexpectedly: %v", err)
 	}
