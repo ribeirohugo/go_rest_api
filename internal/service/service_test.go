@@ -30,7 +30,7 @@ func TestService_FindUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			FindUser(gomock.Any(), idTest).
@@ -47,7 +47,7 @@ func TestService_FindUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			FindUser(gomock.Any(), idTest).
@@ -68,7 +68,7 @@ func TestService_CreateUser(t *testing.T) {
 
 			repositoryMock := NewMockRepository(ctrl)
 
-			service := NewService(repositoryMock)
+			service := New(repositoryMock)
 
 			gomock.InOrder(
 				repositoryMock.EXPECT().
@@ -87,7 +87,7 @@ func TestService_CreateUser(t *testing.T) {
 
 			repositoryMock := NewMockRepository(ctrl)
 
-			service := NewService(repositoryMock)
+			service := New(repositoryMock)
 
 			gomock.InOrder(
 				repositoryMock.EXPECT().
@@ -111,7 +111,7 @@ func TestService_CreateUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		gomock.InOrder(
 			repositoryMock.EXPECT().
@@ -137,7 +137,7 @@ func TestService_UpdateUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			UpdateUser(gomock.Any(), userTest).
@@ -154,7 +154,7 @@ func TestService_UpdateUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			UpdateUser(gomock.Any(), userTest).
@@ -174,7 +174,7 @@ func TestService_DeleteUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			DeleteUser(gomock.Any(), idTest).
@@ -191,7 +191,7 @@ func TestService_DeleteUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 
-		service := NewService(repositoryMock)
+		service := New(repositoryMock)
 
 		repositoryMock.EXPECT().
 			DeleteUser(gomock.Any(), idTest).
