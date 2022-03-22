@@ -1,23 +1,23 @@
 package postgres
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
+
+	"github.com/golang-migrate/migrate/v4"
+	postgresMigration "github.com/golang-migrate/migrate/v4/database/postgres"
 
 	_ "github.com/lib/pq"
 )
 
-const postgresDriveName = "postgres"
-
-type SQL interface {
-	Ping() error
-	QueryRowContext(ctx context.Context, query string, args ...interface{}) *sql.Row
-}
+const (
+	postgresDriveName = "postgres"
+	schemaName        = "schema_migrations"
+)
 
 // Database represents an initialised client to the database.
 type Database struct {
-	sql SQL
+	sql *sql.DB
 }
 
 func New(address string) (*Database, error) {
@@ -32,4 +32,28 @@ func New(address string) (*Database, error) {
 	}
 
 	return &Database{sql: db}, nil
+}
+
+func (db *Database) Migrate(databaseName string, migrationsPath string) error {
+
+	var postgresConfig = postgresMigration.Config{
+		SchemaName: schemaName,
+	}
+
+	driver, err := postgresMigration.WithInstance(db.sql, &postgresConfig)
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(migrationsPath, databaseName, driver)
+	if err != nil {
+		return err
+	}
+
+	err = m.Up()
+	if err == migrate.ErrNoChange {
+		return nil
+	}
+
+	return err
 }
