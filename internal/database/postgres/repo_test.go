@@ -1,10 +1,12 @@
+// +build integration
+
 package postgres
 
 import (
 	"context"
-	"github.com/ribeirohugo/golang_startup/internal/model"
 	"testing"
 
+	"github.com/ribeirohugo/golang_startup/internal/model"
 	"github.com/stretchr/testify/assert"
 )
 
