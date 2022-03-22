@@ -35,7 +35,6 @@ func New(address string) (*Database, error) {
 }
 
 func (db *Database) Migrate(databaseName string, migrationsPath string) error {
-
 	postgresConfig := postgresMigration.Config{
 		SchemaName: schemaName,
 	}
