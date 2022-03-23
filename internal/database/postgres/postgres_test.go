@@ -1,44 +1,69 @@
-// +build integration
-
 package postgres
 
 import (
-	"log"
-	"os"
+	"context"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
+
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/lib/pq"
 )
 
 const (
-	databaseName   = "test_docker"
 	migrationsPath = "file://../../../migrations/postgres"
-	postgresURL    = "mongodb://docker:example@localhost:8090/test_docker?authSource=admin&ssl=false"
+	postgresqlURL  = "postgres://docker:example@%s/test_db?sslmode=disable"
+
+	postgresDB   = "test_db"
+	postgresUser = "docker"
+	postgresPass = "example"
 )
 
-func setup() (*Database, error) {
-	db, err := New(postgresURL)
-	if err != nil {
-		return &Database{}, err
+func setup(t *testing.T) (testcontainers.Container, error) {
+	t.Helper()
+
+	req := testcontainers.ContainerRequest{
+		Image:        "postgres:14-alpine3.15",
+		ExposedPorts: []string{"5432/tcp"},
+		Env: map[string]string{
+			"POSTGRES_DB":       postgresDB,
+			"POSTGRES_USER":     postgresUser,
+			"POSTGRES_PASSWORD": postgresPass,
+		},
+		WaitingFor: wait.ForListeningPort("5432/tcp"),
 	}
 
-	databaseTest := db
-
-	err = databaseTest.Migrate(databaseName, migrationsPath)
-	if err != nil {
-		return &Database{}, err
-	}
-
-	return db, err
+	return testcontainers.GenericContainer(context.Background(), testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
 }
 
-func TestMain(m *testing.M) {
-	db, err := setup()
-	defer db.sql.Close()
+func shutdown(t *testing.T, container testcontainers.Container) {
+	t.Helper()
 
+	err := container.Terminate(context.Background())
 	if err != nil {
-		log.Fatal(err)
+		t.Logf("error tearing down container: %v", err)
 	}
+}
 
-	code := m.Run()
+func buildClient(t *testing.T, container testcontainers.Container) *Database {
+	t.Helper()
 
-	os.Exit(code)
+	endpoint, err := container.Endpoint(context.Background(), "")
+	require.NoError(t, err)
+
+	dbUrl := fmt.Sprintf(postgresqlURL, endpoint)
+
+	db, err := New(dbUrl)
+	require.NoError(t, err)
+
+	err = db.Migrate("users", migrationsPath)
+	require.NoError(t, err)
+
+	return db
 }

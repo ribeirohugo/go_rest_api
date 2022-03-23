@@ -1,5 +1,3 @@
-// +build integration
-
 package postgres
 
 import (
@@ -7,10 +5,13 @@ import (
 	"testing"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
-	"github.com/stretchr/testify/assert"
-)
 
-var databaseTest Database
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/lib/pq"
+)
 
 const (
 	testId    = "00000000-0000-0000-0000-000000000000"
@@ -25,11 +26,17 @@ var testUser = model.User{
 }
 
 func TestDatabase_CreateUser(t *testing.T) {
-	userId, err := databaseTest.CreateUser(context.Background(), testUser)
-	assert.NoError(t, err)
+	container, err := setup(t)
+	defer shutdown(t, container)
+	require.NoError(t, err)
 
-	user, err := databaseTest.FindUser(context.Background(), userId)
-	assert.NoError(t, err)
+	databaseForTest := buildClient(t, container)
+
+	userId, err := databaseForTest.CreateUser(context.Background(), testUser)
+	require.NoError(t, err)
+
+	user, err := databaseForTest.FindUser(context.Background(), userId)
+	require.NoError(t, err)
 
 	assert.Equal(t, testEmail, user.Email)
 	assert.Equal(t, testName, user.Name)

@@ -9,13 +9,14 @@ import (
 
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	row := db.sql.QueryRowContext(ctx, `
-		SELECT id, name, email FROM users WHERE id = $1
+		SELECT id, username, email
+		FROM users WHERE id = $1
 		LIMIT 1
 	`, id)
 
 	var uid, name, email sql.NullString
 
-	err := row.Scan(&uid, &name, &id)
+	err := row.Scan(&uid, &name, &email)
 	if err != nil {
 		return model.User{}, err
 	}
@@ -32,8 +33,8 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	err := db.sql.QueryRowContext(ctx, `
 		UPDATE users 
-		SET username = $1, email = $2
-		WHERE id = $5
+		SET username = $2, email = $3
+		WHERE id = $1
 	`, user.Id, user.Name, user.Email).Err()
 	if err != nil {
 		return err
@@ -45,8 +46,9 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 func (db *Database) CreateUser(ctx context.Context, user model.User) (string, error) {
 	lastInsertedId := ""
 	err := db.sql.QueryRowContext(ctx, `
-		INSERT INTO users (id, name, email)
+		INSERT INTO users (id, username, email)
 		VALUES ($1, $2, $3)
+		RETURNING id
 	`, user.Id, user.Name, user.Email).Scan(&lastInsertedId)
 	if err != nil {
 		return "", err
