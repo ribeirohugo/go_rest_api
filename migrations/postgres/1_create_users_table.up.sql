@@ -1,9 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE users (
-    id SERIAL,
     username VARCHAR(250),
     email VARCHAR(250) UNIQUE,
-    password VARCHAR(250),
-    phone VARCHAR(250),
     created TIMESTAMPTZ,
-    updated TIMESTAMPTZ
+    updated TIMESTAMPTZ,
+
+    id UUID NOT NULL DEFAULT uuid_generate_v4(),
+    CONSTRAINT pkey_tbl PRIMARY KEY (id)
 );
