@@ -11,6 +11,12 @@ import (
 
 const (
 	userCollection = "users"
+
+	idField       = "_id"
+	usernameField = "username"
+	emailField    = "email"
+	createdField  = "created"
+	updatedField  = "updated"
 )
 
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
@@ -48,10 +54,11 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 	id := primitive.NewObjectID()
 
 	_, err := collection.InsertOne(ctx, bson.D{
-		{"_id", id},
-		{"username", user.Name},
-		{"email", user.Email},
-		{"updated", primitive.Timestamp{T: uint32(time.Now().Unix())}},
+		{idField, id},
+		{usernameField, user.Name},
+		{emailField, user.Email},
+		{createdField, primitive.Timestamp{T: uint32(time.Now().Unix())}},
+		{updatedField, primitive.Timestamp{T: uint32(time.Now().Unix())}},
 	})
 
 	return id.String(), err
