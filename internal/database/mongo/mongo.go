@@ -10,13 +10,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-type MongoDB struct {
+type Database struct {
 	client   *mongo.Client
 	database string
 }
 
-func New(ctx context.Context, address string, database string) (MongoDB, error) {
-
+func New(ctx context.Context, address string, database string) (Database, error) {
 	clientOptions := options.Client().ApplyURI(address)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
@@ -31,7 +30,7 @@ func New(ctx context.Context, address string, database string) (MongoDB, error) 
 		log.Fatal(err)
 	}
 
-	db := MongoDB{
+	db := Database{
 		client:   client,
 		database: database,
 	}
