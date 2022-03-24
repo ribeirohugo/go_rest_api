@@ -2,8 +2,8 @@ package postgres
 
 import (
 	"context"
+
 	"github.com/ribeirohugo/golang_startup/internal/model"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -11,12 +11,6 @@ import (
 
 const (
 	userCollection = "users"
-
-	idField       = "_id"
-	usernameField = "username"
-	emailField    = "email"
-	createdField  = "created"
-	updatedField  = "updated"
 )
 
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
@@ -53,17 +47,22 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 
 	id := primitive.NewObjectID()
 
-	_, err := collection.InsertOne(ctx, bson.D{
-		{idField, id},
-		{usernameField, user.Name},
-		{emailField, user.Email},
-		{createdField, primitive.Timestamp{T: uint32(time.Now().Unix())}},
-		{updatedField, primitive.Timestamp{T: uint32(time.Now().Unix())}},
-	})
+	_, err := collection.InsertOne(ctx, user)
 
 	return id.String(), err
 }
 
 func (db *Database) DeleteUser(ctx context.Context, id string) error {
-	return nil
+	idStr, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	collection := db.client.Database(db.database).Collection(userCollection)
+
+	_, err = collection.DeleteOne(ctx, bson.M{
+		"_id": idStr,
+	})
+
+	return err
 }
