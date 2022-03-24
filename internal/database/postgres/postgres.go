@@ -7,12 +7,15 @@ import (
 	migrate "github.com/golang-migrate/migrate/v4"
 	postgresMigration "github.com/golang-migrate/migrate/v4/database/postgres"
 
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
 const (
 	postgresDriveName = "postgres"
-	schemaName        = "schema_migrations"
+
+	migrationsTable = "migrations"
+	schemaName      = "public"
 )
 
 // Database represents an initialised client to the database.
@@ -36,7 +39,9 @@ func New(address string) (*Database, error) {
 
 func (db *Database) Migrate(databaseName string, migrationsPath string) error {
 	postgresConfig := postgresMigration.Config{
-		SchemaName: schemaName,
+		SchemaName:      schemaName,
+		MigrationsTable: migrationsTable,
+		DatabaseName:    databaseName,
 	}
 
 	driver, err := postgresMigration.WithInstance(db.sql, &postgresConfig)

@@ -8,4 +8,5 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.4
 	github.com/stretchr/testify v1.7.0
+	github.com/testcontainers/testcontainers-go v0.12.0
 )
