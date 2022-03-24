@@ -40,10 +40,7 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	collection := db.client.Database(db.database).Collection(userCollection)
 
-	update := bson.D{{
-		"$set",
-		user,
-	}}
+	update := bson.D{{"$set", user}}
 
 	_, err := collection.UpdateByID(ctx, user.Id, update)
 
