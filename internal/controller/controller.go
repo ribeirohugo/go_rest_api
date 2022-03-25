@@ -4,7 +4,6 @@ package controller
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
@@ -25,16 +24,18 @@ type Controller struct {
 }
 
 func New(service Service) *Controller {
-	s := &Controller{
+	c := &Controller{
 		mux:     mux.NewRouter(),
 		service: service,
 	}
 
-	return s
-}
-
-func (c *Controller) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	c.routing()
 
-	c.mux.ServeHTTP(w, r)
+	return c
+}
+
+func (c *Controller) Mux() *mux.Router {
+	c.routing()
+
+	return c.mux
 }

@@ -43,13 +43,13 @@ func TestServer_FindUser(t *testing.T) {
 			Return(testUser, nil).
 			Times(1)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -69,13 +69,13 @@ func TestServer_FindUser(t *testing.T) {
 
 		serverTest := New(mockService)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
@@ -101,7 +101,7 @@ func TestServer_CreateUser(t *testing.T) {
 			Return(testUser, nil).
 			Times(1)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
@@ -109,7 +109,7 @@ func TestServer_CreateUser(t *testing.T) {
 		r, _ := http.NewRequest(http.MethodPost, serverURL, reader)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -129,7 +129,7 @@ func TestServer_CreateUser(t *testing.T) {
 
 		serverTest := New(mockService)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
@@ -137,7 +137,7 @@ func TestServer_CreateUser(t *testing.T) {
 		r, _ := http.NewRequest(http.MethodPost, serverURL, reader)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
@@ -163,7 +163,7 @@ func TestServer_UpdateUser(t *testing.T) {
 			Return(testUser, nil).
 			Times(1)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
@@ -171,7 +171,7 @@ func TestServer_UpdateUser(t *testing.T) {
 		r, _ := http.NewRequest(http.MethodPut, serverURL, reader)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -191,7 +191,7 @@ func TestServer_UpdateUser(t *testing.T) {
 
 		serverTest := New(mockService)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
@@ -199,7 +199,7 @@ func TestServer_UpdateUser(t *testing.T) {
 		r, _ := http.NewRequest(http.MethodPut, serverURL, reader)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
@@ -219,13 +219,13 @@ func TestServer_DeleteUser(t *testing.T) {
 			Return(nil).
 			Times(1)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -245,13 +245,13 @@ func TestServer_DeleteUser(t *testing.T) {
 
 		serverTest := New(mockService)
 
-		serverReturn := httptest.NewServer(serverTest)
+		serverReturn := httptest.NewServer(serverTest.mux)
 		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
 		w := httptest.NewRecorder()
 
-		serverTest.ServeHTTP(w, r)
+		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
 	})
