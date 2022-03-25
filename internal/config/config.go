@@ -9,11 +9,16 @@ const (
 	serverHostEnv = "HOST"
 	serverPortEnv = "PORT"
 
-	databaseAddressEnv = "DATABASE"
+	databaseAddressEnv = "DB_ADDRESS"
+	databaseNameEnv    = "DB_NAME"
+
+	migrationsPathEnv = "MIGRATIONS_PATH"
 )
 
 type Database struct {
-	Address string
+	Address        string
+	Name           string
+	MigrationsPath string
 }
 
 type Server struct {
@@ -29,7 +34,9 @@ type Config struct {
 func Load() Config {
 	return Config{
 		Database: Database{
-			Address: os.Getenv(databaseAddressEnv),
+			Address:        os.Getenv(databaseAddressEnv),
+			Name:           os.Getenv(databaseNameEnv),
+			MigrationsPath: os.Getenv(migrationsPathEnv),
 		},
 		Server: Server{
 			Host: os.Getenv(serverHostEnv),
