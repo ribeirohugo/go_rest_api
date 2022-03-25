@@ -4,6 +4,7 @@ package controller
 
 import (
 	"context"
+
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
 	"github.com/gorilla/mux"
