@@ -65,5 +65,5 @@ func buildClient(t *testing.T, container testcontainers.Container) *Database {
 	db, err := New(context.Background(), dbUrl, databaseTest)
 	require.NoError(t, err)
 
-	return &db
+	return db
 }

@@ -13,6 +13,7 @@ const (
 	userCollection = "users"
 )
 
+// FindUser(ctx context.Context, id string) (model.User, error)
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	var user model.User
 
