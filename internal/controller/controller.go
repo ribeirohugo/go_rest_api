@@ -38,3 +38,7 @@ func (c *Controller) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	c.mux.ServeHTTP(w, r)
 }
+
+func (c *Controller) Mux() *mux.Router {
+	return c.mux
+}
