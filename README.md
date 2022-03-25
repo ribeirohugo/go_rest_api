@@ -9,7 +9,9 @@ Check out the following tables to know all ``Config`` parameters detailed.
 
 | Parameter | Description | Type | Default | Required |
 |:---|:---|:---|:---|:---|
-| ``DATABASE`` | Database URL address. | `string`  | ` ` | **YES** |
+| ``DB_ADDRESS`` | Database URL address. | `string`  | ` ` | **YES** |
+| ``DB_NAME`` | Name of the initial database to access. | `string`  | ` ` | **NO** |
+| ``MIGRATIONS_PATH`` | Migrations local path if needed. | `string`  | ` ` | **NO** |
 | ``HOST`` | HTTP server host number. | `string` | ` ` | **NO** |
 | ``PORT`` | HTTP server port number. | `string` | ` ` | **YES** |
 
