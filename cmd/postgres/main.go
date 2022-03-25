@@ -18,6 +18,11 @@ func main() {
 		log.Fatalf("failed to initialise the database client: %v", err)
 	}
 
+	err = database.Migrate(cfg.Database.Name, cfg.Database.MigrationsPath)
+	if err != nil {
+		log.Fatalf("failed initialise database migrations: %v", err)
+	}
+
 	userService := service.New(database)
 
 	controllers := controller.New(userService)
