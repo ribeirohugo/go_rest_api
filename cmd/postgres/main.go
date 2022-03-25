@@ -23,9 +23,9 @@ func main() {
 		log.Fatalf("failed initialise database migrations: %v", err)
 	}
 
-	userService := service.New(database)
+	services := service.New(database)
 
-	controllers := controller.New(userService)
+	controllers := controller.New(services)
 
 	srv := server.New(controllers, cfg.GetServerAddress())
 

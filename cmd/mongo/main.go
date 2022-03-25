@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
 
 	"github.com/ribeirohugo/golang_startup/internal/config"
 	"github.com/ribeirohugo/golang_startup/internal/controller"
 	"github.com/ribeirohugo/golang_startup/internal/database/mongodb"
+	"github.com/ribeirohugo/golang_startup/internal/server"
 	"github.com/ribeirohugo/golang_startup/internal/service"
 )
 
@@ -19,14 +19,11 @@ func main() {
 		log.Fatalf("failed to initialise the database client: %v", err)
 	}
 
-	userService := service.New(database)
+	services := service.New(database)
 
-	controllers := controller.New(userService)
+	controllers := controller.New(services)
 
-	hostAddress := cfg.GetServerAddress()
+	srv := server.New(controllers, cfg.GetServerAddress())
 
-	err = http.ListenAndServe(hostAddress, controllers)
-	if err != http.ErrServerClosed {
-		log.Printf("http server terminated unexpectedly: %v", err)
-	}
+	srv.ServeHTTP()
 }
