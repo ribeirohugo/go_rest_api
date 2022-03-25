@@ -19,6 +19,16 @@ Check out the following tables to know all ``Config`` parameters detailed.
 
 After define ``env`` variables values, run the following commands to start web application server.
 
+The different examples of running this application packages and features are available in ``cmd``.
+
+For a REST application with a postgres database layer use:
+
 ``
-go run ./cmd/server/main.go
+go run ./cmd/postgres/main.go
+``
+
+For a mongoDB database layer use:
+
+``
+go run ./cmd/mongo/main.go
 ``
