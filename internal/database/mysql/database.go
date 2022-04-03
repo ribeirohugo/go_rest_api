@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/golang-migrate/migrate/v4"
+	migrate "github.com/golang-migrate/migrate/v4"
 	mysqlMigration "github.com/golang-migrate/migrate/v4/database/mysql"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,10 +12,8 @@ import (
 )
 
 const (
-	mysqlDriveName = "mysql"
-
+	mysqlDriveName  = "mysql"
 	migrationsTable = "migrations"
-	schemaName      = "public"
 )
 
 type Database struct {
