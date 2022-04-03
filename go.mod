@@ -10,4 +10,5 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/testcontainers/testcontainers-go v0.12.0
 	go.mongodb.org/mongo-driver v1.8.4
+	github.com/go-sql-driver/mysql v1.6.0
 )
