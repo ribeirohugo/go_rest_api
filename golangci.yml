@@ -6,12 +6,20 @@ linters-settings:
 linters:
   # Enable extra linters besides the default ones
   enable:
-    - goimports
+    - deadcode
     - goconst
+    - gocyclo
+    - gofmt
+    - goimports
+    - gosimple
     - govet
+    - lll
+    - misspell
+    - nolintlint
     - stylecheck
     - unconvert
     - unparam
-    - misspell
+    - unused
+    - varcheck
     - whitespace
     - wsl
