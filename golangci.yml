@@ -29,12 +29,14 @@ linters:
     - gocyclo
     - gofmt
     - goimports
+    - gosec
     - gosimple
     - govet
     - ineffassign
     - lll
     - misspell
     - nolintlint
+    - revive
     - staticcheck
     - structcheck️
     - stylecheck
