@@ -114,7 +114,7 @@ func TestServer_CreateUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, w.Body.String(), string(buf.Bytes()))
+		assert.Contains(t, w.Body.String(), buf.String())
 	})
 
 	t.Run("Error creating user", func(t *testing.T) {
@@ -177,7 +177,7 @@ func TestServer_UpdateUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, w.Body.String(), string(buf.Bytes()))
+		assert.Contains(t, w.Body.String(), buf.String())
 	})
 
 	t.Run("Error updating user", func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestServer_DeleteUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, string(w.Body.Bytes()), userDeletedMessage)
+		assert.Contains(t, w.Body.String(), userDeletedMessage)
 	})
 
 	t.Run("Error deleting user", func(t *testing.T) {

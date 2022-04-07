@@ -17,6 +17,7 @@ type Database struct {
 
 func New(ctx context.Context, address string, database string) (*Database, error) {
 	clientOptions := options.Client().ApplyURI(address)
+
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatal(err)
