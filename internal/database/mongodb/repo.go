@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
 	"go.mongodb.org/mongo-driver/bson"

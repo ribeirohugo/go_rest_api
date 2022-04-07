@@ -57,5 +57,6 @@ func (c *Server) ServeHTTP() {
 	if err != nil {
 		log.Fatalf("Server shutdown failed: %+v", err)
 	}
+
 	log.Println("Server exited properly.")
 }

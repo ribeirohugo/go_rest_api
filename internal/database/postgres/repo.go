@@ -45,6 +45,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 
 func (db *Database) CreateUser(ctx context.Context, user model.User) (string, error) {
 	lastInsertedId := ""
+
 	err := db.sql.QueryRowContext(ctx, `
 		INSERT INTO users (id, username, email)
 		VALUES ($1, $2, $3)
