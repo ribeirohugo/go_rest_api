@@ -31,9 +31,12 @@ linters:
     - goimports
     - gosimple
     - govet
+    - ineffassign
     - lll
     - misspell
     - nolintlint
+    - staticcheck
+    - structcheck️
     - stylecheck
     - unconvert
     - unparam
