@@ -38,7 +38,6 @@ linters:
     - nolintlint
     - revive
     - staticcheck
-    - structcheck️
     - stylecheck
     - unconvert
     - unparam
