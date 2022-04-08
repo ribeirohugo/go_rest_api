@@ -1,3 +1,4 @@
+// Package mysql holds MySQL database and repository methods.
 package mysql
 
 import (
@@ -16,10 +17,12 @@ const (
 	migrationsTable = "migrations"
 )
 
+// Database - MySQL database struct
 type Database struct {
 	client *sql.DB
 }
 
+// New creates a new MySQL database struct
 func New(address string) (*Database, error) {
 	db, err := sql.Open(mysqlDriveName, address)
 	if err != nil {
@@ -34,6 +37,8 @@ func New(address string) (*Database, error) {
 	return &Database{client: db}, nil
 }
 
+// Migrate - Runs a database migration for a given database and migrations path with the SQL files
+// It returns an error in case of failure
 func (db *Database) Migrate(databaseName string, migrationsPath string) error {
 	postgresConfig := mysqlMigration.Config{
 		MigrationsTable: migrationsTable,

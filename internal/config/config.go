@@ -1,3 +1,4 @@
+// Package config holds configuration global data to be initialized.
 package config
 
 import (
@@ -15,22 +16,26 @@ const (
 	migrationsPathEnv = "MIGRATIONS_PATH"
 )
 
+// Database - database related config data
 type Database struct {
 	Address        string
 	Name           string
 	MigrationsPath string
 }
 
+// Server - server related config data
 type Server struct {
 	Host string
 	Port string
 }
 
+// Config - holds global configs
 type Config struct {
 	Database Database
 	Server   Server
 }
 
+// Load - loads configurations data
 func Load() Config {
 	return Config{
 		Database: Database{
@@ -45,6 +50,7 @@ func Load() Config {
 	}
 }
 
+// GetServerAddress - returns server address based on Server configs
 func (c *Config) GetServerAddress() string {
 	return fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port)
 }

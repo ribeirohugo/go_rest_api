@@ -1,3 +1,4 @@
+// Package mongodb holds MongoDB database and repository methods.
 package mongodb
 
 import (
@@ -10,11 +11,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+const timeoutDefaultDuration = 5
+
+// Database - MongoDB database struct
 type Database struct {
 	client   *mongo.Client
 	database string
 }
 
+// New creates a new MongoDB database struct
 func New(ctx context.Context, address string, database string) (*Database, error) {
 	clientOptions := options.Client().ApplyURI(address)
 
@@ -23,7 +28,7 @@ func New(ctx context.Context, address string, database string) (*Database, error
 		log.Fatal(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeoutDefaultDuration*time.Second)
 	defer cancel()
 
 	err = client.Ping(ctx, readpref.Primary())

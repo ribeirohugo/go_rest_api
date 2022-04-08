@@ -22,6 +22,11 @@ linters-settings:
     # tab width in spaces. Default to 1.
     tab-width: 1
 
+  revive:
+    rules:
+      - name: exported
+        severity: error
+
 linters:
   # Enable extra linters besides the default ones
   enable:
@@ -32,6 +37,7 @@ linters:
     - gocyclo
     - gofmt
     - goimports
+    - gomnd
     - gosec
     - gosimple
     - govet
@@ -43,6 +49,7 @@ linters:
     - rowserrcheck
     - staticcheck
     - stylecheck
+    - typecheck
     - unconvert
     - unparam
     - unused
@@ -51,6 +58,15 @@ linters:
     - wsl
 
 issues:
+  # Independently from option `exclude` we use default exclude patterns,
+  # it can be disabled by this option. To list all
+  # excluded by default patterns execute `golangci-lint run --help`.
+  # Default value for this option is true.
+  exclude-use-default: false
+
+  # The list of ids of default excludes to include or disable. By default it's empty.
+  include:
+    - EXC0002 # disable excluding of issues about comments from golint
 
   exclude-rules:
     # Exclude some linters from running on tests files.
@@ -58,5 +74,6 @@ issues:
       linters:
         - dupl
         - errcheck
+        - gomnd
         - gosec
         - lll

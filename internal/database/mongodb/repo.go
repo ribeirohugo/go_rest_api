@@ -10,11 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const (
-	userCollection = "users"
-)
+const userCollection = "users"
 
-// FindUser(ctx context.Context, id string) (model.User, error)
+// FindUser - Returns a user for a given ID or an error if anything fails
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	var user model.User
 
@@ -39,6 +37,7 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 	return user, nil
 }
 
+// UpdateUser - Updates a user and returns an error if anything fails
 func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	collection := db.client.Database(db.database).Collection(userCollection)
 
@@ -49,6 +48,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	return err
 }
 
+// CreateUser - Creates a user and returns its ID or an error, if anything fails
 func (db *Database) CreateUser(ctx context.Context, user model.User) (string, error) {
 	collection := db.client.Database(db.database).Collection(userCollection)
 
@@ -61,6 +61,7 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 	return id, err
 }
 
+// DeleteUser - Deletes a User for a given ID and could return an error if anything fails
 func (db *Database) DeleteUser(ctx context.Context, id string) error {
 	collection := db.client.Database(db.database).Collection(userCollection)
 
