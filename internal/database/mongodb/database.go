@@ -11,6 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+const timeoutDefaultDuration = 5
+
 // Database - MongoDB database struct
 type Database struct {
 	client   *mongo.Client
@@ -26,7 +28,7 @@ func New(ctx context.Context, address string, database string) (*Database, error
 		log.Fatal(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), timeoutDefaultDuration*time.Second)
 	defer cancel()
 
 	err = client.Ping(ctx, readpref.Primary())

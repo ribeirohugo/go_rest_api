@@ -13,6 +13,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const timeoutDefaultDuration = 5
+
 // Controller abstracts the controller layer.
 type Controller interface {
 	Mux() *mux.Router
@@ -53,7 +55,7 @@ func (c *Server) ServeHTTP() {
 	<-done
 	log.Println("Server closed.")
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutDefaultDuration)*time.Second)
 	defer func() {
 		cancel()
 	}()

@@ -10,6 +10,8 @@ import (
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
 
+const baseNumber = 10
+
 // FindUser - Returns a user for a given ID or an error if anything fails
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	row := db.client.QueryRowContext(ctx, `
@@ -65,7 +67,7 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 
 	log.Println(lastInsertedID)
 
-	return strconv.FormatInt(lastInsertedID, 10), nil
+	return strconv.FormatInt(lastInsertedID, baseNumber), nil
 }
 
 // DeleteUser - Deletes a User for a given ID and could return an error if anything fails
