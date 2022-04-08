@@ -18,11 +18,12 @@ const (
 	schemaName      = "public"
 )
 
-// Database represents an initialised client to the database.
+// Database - PostgreSQL database struct
 type Database struct {
 	sql *sql.DB
 }
 
+// New creates a new PostgreSQL database struct
 func New(address string) (*Database, error) {
 	db, err := sql.Open(postgresDriveName, address)
 	if err != nil {
@@ -37,6 +38,8 @@ func New(address string) (*Database, error) {
 	return &Database{sql: db}, nil
 }
 
+// Migrate - Runs a database migration for a given database and migrations path with the SQL files
+// It returns an error in case of failure
 func (db *Database) Migrate(databaseName string, migrationsPath string) error {
 	postgresConfig := postgresMigration.Config{
 		SchemaName:      schemaName,

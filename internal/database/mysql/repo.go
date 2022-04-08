@@ -10,6 +10,7 @@ import (
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
 
+// FindUser - Returns a user for a given ID or an error if anything fails
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	row := db.client.QueryRowContext(ctx, `
 		SELECT id, username, email
@@ -33,6 +34,7 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 	return user, nil
 }
 
+// UpdateUser - Updates a user and returns an error if anything fails
 func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	err := db.client.QueryRowContext(ctx, `
 		UPDATE users 
@@ -46,6 +48,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	return nil
 }
 
+// CreateUser - Creates a user and returns its ID or an error, if anything fails
 func (db *Database) CreateUser(ctx context.Context, user model.User) (string, error) {
 	res, err := db.client.ExecContext(ctx, `
 		INSERT INTO users (username, email)
@@ -65,6 +68,7 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 	return strconv.FormatInt(lastInsertedID, 10), nil
 }
 
+// DeleteUser - Deletes a User for a given ID and could return an error if anything fails
 func (db *Database) DeleteUser(ctx context.Context, id string) error {
 	err := db.client.QueryRowContext(ctx, `
 		DELETE FROM users

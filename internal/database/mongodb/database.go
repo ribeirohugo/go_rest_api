@@ -10,11 +10,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+// Database - MongoDB database struct
 type Database struct {
 	client   *mongo.Client
 	database string
 }
 
+// New creates a new MongoDB database struct
 func New(ctx context.Context, address string, database string) (*Database, error) {
 	clientOptions := options.Client().ApplyURI(address)
 
