@@ -44,6 +44,7 @@ linters:
     - rowserrcheck
     - staticcheck
     - stylecheck
+    - typecheck
     - unconvert
     - unparam
     - unused
