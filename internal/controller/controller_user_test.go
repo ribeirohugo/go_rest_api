@@ -24,7 +24,7 @@ const (
 )
 
 var testUser = model.User{
-	Id:    idTest,
+	ID:    idTest,
 	Name:  nameTest,
 	Email: emailTest,
 }

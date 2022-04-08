@@ -35,12 +35,12 @@ func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {
 }
 
 func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, error) {
-	userId, err := s.repo.CreateUser(ctx, user)
+	userID, err := s.repo.CreateUser(ctx, user)
 	if err != nil {
 		return model.User{}, fmt.Errorf("fail creating user: %v", err)
 	}
 
-	createdUser, err := s.repo.FindUser(ctx, userId)
+	createdUser, err := s.repo.FindUser(ctx, userID)
 	if err != nil {
 		return model.User{}, fmt.Errorf("fail finding created user: %v", err)
 	}

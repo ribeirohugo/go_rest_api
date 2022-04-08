@@ -25,7 +25,7 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 	}
 
 	user := model.User{
-		Id:    uid.String,
+		ID:    uid.String,
 		Name:  name.String,
 		Email: email.String,
 	}
@@ -38,7 +38,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 		UPDATE users 
 		SET username = $2, email = $3
 		WHERE id = $1
-	`, user.Id, user.Name, user.Email).Err()
+	`, user.ID, user.Name, user.Email).Err()
 	if err != nil {
 		return err
 	}
@@ -55,14 +55,14 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 		return "", fmt.Errorf("error creating user: %s", err.Error())
 	}
 
-	lastInsertedId, err := res.LastInsertId()
+	lastInsertedID, err := res.LastInsertId()
 	if err != nil {
 		return "", fmt.Errorf("error returning last insert ID: %s", err.Error())
 	}
 
-	log.Println(lastInsertedId)
+	log.Println(lastInsertedID)
 
-	return strconv.FormatInt(lastInsertedId, 10), nil
+	return strconv.FormatInt(lastInsertedID, 10), nil
 }
 
 func (db *Database) DeleteUser(ctx context.Context, id string) error {
