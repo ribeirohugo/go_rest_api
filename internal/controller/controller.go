@@ -18,11 +18,13 @@ type Service interface {
 	DeleteUser(ctx context.Context, id string) error
 }
 
+// Controller - controller related struct
 type Controller struct {
 	mux     *mux.Router
 	service Service
 }
 
+// New - Instantiates a new Controller. Requires a Service.
 func New(service Service) *Controller {
 	c := &Controller{
 		mux:     mux.NewRouter(),
@@ -34,6 +36,7 @@ func New(service Service) *Controller {
 	return c
 }
 
+// Mux - Initializes routing and returns a Router.
 func (c *Controller) Mux() *mux.Router {
 	c.routing()
 

@@ -12,15 +12,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Controller abstracts the controller layer.
 type Controller interface {
 	Mux() *mux.Router
 }
 
+// Server - holds server struct data
 type Server struct {
 	controller Controller
 	server     http.Server
 }
 
+// New - instantiates a new Server
 func New(controller Controller, address string) Server {
 	return Server{
 		controller: controller,
@@ -31,6 +34,7 @@ func New(controller Controller, address string) Server {
 	}
 }
 
+// ServeHTTP - Starts a new server and allows to shut it down gracefully.
 func (c *Server) ServeHTTP() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

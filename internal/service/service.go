@@ -22,9 +22,12 @@ type Service struct {
 	repo Repository
 }
 
+// New instantiates a Service
 func New(repo Repository) *Service {
 	return &Service{repo: repo}
 }
+
+// FindUser - Returns a new user for a given ID. Returns the user or an error if anything fails.
 func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {
 	user, err := s.repo.FindUser(ctx, id)
 	if err != nil {
@@ -34,6 +37,7 @@ func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {
 	return user, nil
 }
 
+// CreateUser - Creates a new user. Returns the created user or an error if anything fails.
 func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, error) {
 	userID, err := s.repo.CreateUser(ctx, user)
 	if err != nil {
@@ -48,6 +52,7 @@ func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, 
 	return createdUser, nil
 }
 
+// UpdateUser - Updates an existing user. It returns the updated user or returns an error if anything fails.
 func (s *Service) UpdateUser(ctx context.Context, user model.User) (model.User, error) {
 	err := s.repo.UpdateUser(ctx, user)
 	if err != nil {
@@ -57,6 +62,7 @@ func (s *Service) UpdateUser(ctx context.Context, user model.User) (model.User, 
 	return user, nil
 }
 
+// DeleteUser - Removes a user from the database. It returns an error if anything fails.
 func (s *Service) DeleteUser(ctx context.Context, id string) error {
 	err := s.repo.DeleteUser(ctx, id)
 	if err != nil {
