@@ -17,8 +17,7 @@ const (
 )
 
 type Database struct {
-	client   *sql.DB
-	database string
+	client *sql.DB
 }
 
 func New(address string) (*Database, error) {
