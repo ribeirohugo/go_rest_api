@@ -7,8 +7,8 @@ import (
 	migrate "github.com/golang-migrate/migrate/v4"
 	postgresMigration "github.com/golang-migrate/migrate/v4/database/postgres"
 
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
+	_ "github.com/golang-migrate/migrate/v4/source/file" // Migrate source import
+	_ "github.com/lib/pq"                                // PostgreSQL driver
 )
 
 const (
