@@ -64,10 +64,6 @@ issues:
   # Default value for this option is true.
   exclude-use-default: false
 
-  # The default value is false. If set to true exclude and exclude-rules
-  # regular expressions become case sensitive.
-  exclude-case-sensitive: false
-
   # The list of ids of default excludes to include or disable. By default it's empty.
   include:
     - EXC0002 # disable excluding of issues about comments from golint
