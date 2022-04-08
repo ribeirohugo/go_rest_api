@@ -1,3 +1,4 @@
+// Package config holds configuration global data to be initialized.
 package config
 
 import (

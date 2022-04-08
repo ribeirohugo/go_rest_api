@@ -1,3 +1,4 @@
+// Package server holds server related struct and methods.
 package server
 
 import (

@@ -1,3 +1,4 @@
+// Package model holds domain model structs and methods.
 package model
 
 // User - domain model for a user

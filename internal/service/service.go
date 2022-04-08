@@ -1,5 +1,6 @@
 //go:generate mockgen -package service -source=service.go -destination service_mock.go
 
+// Package service holds service layer methods and repository/database abstractions.
 package service
 
 import (

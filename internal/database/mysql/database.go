@@ -1,3 +1,4 @@
+// Package mysql holds MySQL database and repository methods.
 package mysql
 
 import (

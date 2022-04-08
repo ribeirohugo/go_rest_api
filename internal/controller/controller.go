@@ -1,5 +1,6 @@
 //go:generate mockgen -package controller -source=controller.go -destination controller_mock.go
 
+// Package controller holds application controllers.
 package controller
 
 import (

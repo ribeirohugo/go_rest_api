@@ -1,3 +1,4 @@
+// Package postgres holds PostgreSQL database and repository methods.
 package postgres
 
 import (

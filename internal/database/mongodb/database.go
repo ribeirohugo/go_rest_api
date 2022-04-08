@@ -1,3 +1,4 @@
+// Package mongodb holds MongoDB database and repository methods.
 package mongodb
 
 import (
