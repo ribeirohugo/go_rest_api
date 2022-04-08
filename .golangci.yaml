@@ -60,5 +60,6 @@ issues:
       linters:
         - dupl
         - errcheck
+        - gomnd
         - gosec
         - lll
