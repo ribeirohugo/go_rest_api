@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	testId    = "00000000-0000-0000-0000-000000000000"
+	testID    = "00000000-0000-0000-0000-000000000000"
 	testEmail = "email@domain"
 	testName  = "name"
 
@@ -25,7 +25,7 @@ const (
 )
 
 var testUser = model.User{
-	Id:    testId,
+	ID:    testID,
 	Email: testEmail,
 	Name:  testName,
 }
@@ -37,10 +37,10 @@ func TestDatabase_CreateUser_FindUser(t *testing.T) {
 
 	databaseForTest := buildClient(t, container)
 
-	userId, err := databaseForTest.CreateUser(context.Background(), testUser)
+	userID, err := databaseForTest.CreateUser(context.Background(), testUser)
 	require.NoError(t, err)
 
-	user, err := databaseForTest.FindUser(context.Background(), userId)
+	user, err := databaseForTest.FindUser(context.Background(), userID)
 	require.NoError(t, err)
 
 	assert.Equal(t, testEmail, user.Email)
@@ -52,15 +52,15 @@ func TestDatabase_CreateUser_FindUser(t *testing.T) {
 	err = databaseForTest.UpdateUser(context.Background(), user)
 	require.NoError(t, err)
 
-	updatedUser, err := databaseForTest.FindUser(context.Background(), userId)
+	updatedUser, err := databaseForTest.FindUser(context.Background(), userID)
 	require.NoError(t, err)
 
 	assert.Equal(t, testNameUpdate, updatedUser.Name)
 	assert.Equal(t, testEmailUpdate, updatedUser.Email)
 
-	err = databaseForTest.DeleteUser(context.Background(), userId)
+	err = databaseForTest.DeleteUser(context.Background(), userID)
 	require.NoError(t, err)
 
-	user, err = databaseForTest.FindUser(context.Background(), userId)
+	user, err = databaseForTest.FindUser(context.Background(), userID)
 	require.Error(t, err)
 }

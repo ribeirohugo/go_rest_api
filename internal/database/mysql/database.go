@@ -7,8 +7,8 @@ import (
 	migrate "github.com/golang-migrate/migrate/v4"
 	mysqlMigration "github.com/golang-migrate/migrate/v4/database/mysql"
 
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/go-sql-driver/mysql"                   // MySQL driver
+	_ "github.com/golang-migrate/migrate/v4/source/file" // Migrate source import
 )
 
 const (
@@ -17,8 +17,7 @@ const (
 )
 
 type Database struct {
-	client   *sql.DB
-	database string
+	client *sql.DB
 }
 
 func New(address string) (*Database, error) {

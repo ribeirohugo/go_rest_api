@@ -24,7 +24,7 @@ const (
 )
 
 var testUser = model.User{
-	Id:    idTest,
+	ID:    idTest,
 	Name:  nameTest,
 	Email: emailTest,
 }
@@ -53,7 +53,7 @@ func TestServer_FindUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Equal(t, string(w.Body.Bytes()), jsonOutput)
+		assert.Equal(t, w.Body.String(), jsonOutput)
 	})
 
 	t.Run("Error GetUser", func(t *testing.T) {
@@ -83,6 +83,7 @@ func TestServer_FindUser(t *testing.T) {
 
 func TestServer_CreateUser(t *testing.T) {
 	var buf bytes.Buffer
+
 	err := json.NewEncoder(&buf).Encode(testUser)
 	if err != nil {
 		require.NoError(t, err)
@@ -113,7 +114,7 @@ func TestServer_CreateUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, string(w.Body.Bytes()), string(buf.Bytes()))
+		assert.Contains(t, w.Body.String(), buf.String())
 	})
 
 	t.Run("Error creating user", func(t *testing.T) {
@@ -145,6 +146,7 @@ func TestServer_CreateUser(t *testing.T) {
 
 func TestServer_UpdateUser(t *testing.T) {
 	var buf bytes.Buffer
+
 	err := json.NewEncoder(&buf).Encode(testUser)
 	if err != nil {
 		require.NoError(t, err)
@@ -175,7 +177,7 @@ func TestServer_UpdateUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, string(w.Body.Bytes()), string(buf.Bytes()))
+		assert.Contains(t, w.Body.String(), buf.String())
 	})
 
 	t.Run("Error updating user", func(t *testing.T) {
@@ -229,7 +231,7 @@ func TestServer_DeleteUser(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, string(w.Body.Bytes()), userDeletedMessage)
+		assert.Contains(t, w.Body.String(), userDeletedMessage)
 	})
 
 	t.Run("Error deleting user", func(t *testing.T) {

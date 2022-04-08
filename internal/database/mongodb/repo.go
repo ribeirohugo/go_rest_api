@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -43,7 +44,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 
 	update := bson.M{"$set": user}
 
-	_, err := collection.UpdateByID(ctx, user.Id, update)
+	_, err := collection.UpdateByID(ctx, user.ID, update)
 
 	return err
 }
@@ -53,7 +54,7 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 
 	id := primitive.NewObjectID().String()
 
-	user.Id = id
+	user.ID = id
 
 	_, err := collection.InsertOne(ctx, user)
 
