@@ -1,6 +1,14 @@
 name: Test and Lint
 on:
-  push
+  push:
+    tags:
+      - v*
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-and-lint:
