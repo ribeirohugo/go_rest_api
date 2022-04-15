@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/ribeirohugo/golang_startup/internal/common"
 	"github.com/ribeirohugo/golang_startup/internal/config"
 	"github.com/ribeirohugo/golang_startup/internal/controller"
 	"github.com/ribeirohugo/golang_startup/internal/database/mysql"
@@ -23,7 +24,8 @@ func main() {
 		log.Fatalf("failed initialise database migrations: %v", err)
 	}
 
-	services := service.New(database)
+	timer := common.NewTimer()
+	services := service.New(database, timer)
 
 	controllers := controller.New(services)
 

@@ -6,6 +6,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
@@ -18,14 +19,23 @@ type Repository interface {
 	DeleteUser(ctx context.Context, id string) error
 }
 
+// Timer abstraction layer for time operations.
+type Timer interface {
+	Now() time.Time
+}
+
 // Service represents the user domain service layer.
 type Service struct {
-	repo Repository
+	repo  Repository
+	timer Timer
 }
 
 // New instantiates a Service
-func New(repo Repository) *Service {
-	return &Service{repo: repo}
+func New(repo Repository, timer Timer) *Service {
+	return &Service{
+		repo:  repo,
+		timer: timer,
+	}
 }
 
 // FindUser - Returns a new user for a given ID. Returns the user or an error if anything fails.
@@ -40,6 +50,9 @@ func (s *Service) FindUser(ctx context.Context, id string) (model.User, error) {
 
 // CreateUser - Creates a new user. Returns the created user or an error if anything fails.
 func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, error) {
+	user.CreatedAt = s.timer.Now()
+	user.UpdatedAt = s.timer.Now()
+
 	userID, err := s.repo.CreateUser(ctx, user)
 	if err != nil {
 		return model.User{}, fmt.Errorf("fail creating user: %v", err)
@@ -55,6 +68,8 @@ func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, 
 
 // UpdateUser - Updates an existing user. It returns the updated user or returns an error if anything fails.
 func (s *Service) UpdateUser(ctx context.Context, user model.User) (model.User, error) {
+	user.UpdatedAt = s.timer.Now()
+
 	err := s.repo.UpdateUser(ctx, user)
 	if err != nil {
 		return model.User{}, fmt.Errorf("fail updating user: %v", err)

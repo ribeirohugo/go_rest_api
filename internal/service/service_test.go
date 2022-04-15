@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
+	"github.com/ribeirohugo/golang_startup/internal/common"
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
 	"github.com/golang/mock/gomock"
@@ -17,11 +19,23 @@ const (
 	nameTest  = "Test"
 )
 
-var userTest = model.User{
-	ID:    idTest,
-	Name:  nameTest,
-	Email: emailTest,
-}
+var (
+	userTest = model.User{
+		ID:    idTest,
+		Name:  nameTest,
+		Email: emailTest,
+	}
+
+	userTestWithUpdatedTimestamps = model.User{
+		ID:        idTest,
+		Name:      nameTest,
+		Email:     emailTest,
+		CreatedAt: timeTest,
+		UpdatedAt: timeTest,
+	}
+
+	timeTest = time.Now()
+)
 
 func TestService_FindUser(t *testing.T) {
 	t.Run("Returns an error", func(t *testing.T) {
@@ -29,8 +43,9 @@ func TestService_FindUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
 		repositoryMock.EXPECT().
 			FindUser(gomock.Any(), idTest).
@@ -46,8 +61,9 @@ func TestService_FindUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
 		repositoryMock.EXPECT().
 			FindUser(gomock.Any(), idTest).
@@ -67,12 +83,17 @@ func TestService_CreateUser(t *testing.T) {
 			defer ctrl.Finish()
 
 			repositoryMock := NewMockRepository(ctrl)
+			timerMock := NewMockTimer(ctrl)
 
-			service := New(repositoryMock)
+			service := New(repositoryMock, timerMock)
 
 			gomock.InOrder(
+				timerMock.EXPECT().
+					Now().
+					Return(timeTest).
+					Times(2),
 				repositoryMock.EXPECT().
-					CreateUser(gomock.Any(), userTest).
+					CreateUser(gomock.Any(), userTestWithUpdatedTimestamps).
 					Return(idTest, fmt.Errorf("error")).
 					Times(1),
 			)
@@ -86,12 +107,17 @@ func TestService_CreateUser(t *testing.T) {
 			defer ctrl.Finish()
 
 			repositoryMock := NewMockRepository(ctrl)
+			timerMock := NewMockTimer(ctrl)
 
-			service := New(repositoryMock)
+			service := New(repositoryMock, timerMock)
 
 			gomock.InOrder(
+				timerMock.EXPECT().
+					Now().
+					Return(timeTest).
+					Times(2),
 				repositoryMock.EXPECT().
-					CreateUser(gomock.Any(), userTest).
+					CreateUser(gomock.Any(), userTestWithUpdatedTimestamps).
 					Return(idTest, nil).
 					Times(1),
 				repositoryMock.EXPECT().
@@ -110,12 +136,17 @@ func TestService_CreateUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
 		gomock.InOrder(
+			timerMock.EXPECT().
+				Now().
+				Return(timeTest).
+				Times(2),
 			repositoryMock.EXPECT().
-				CreateUser(gomock.Any(), userTest).
+				CreateUser(gomock.Any(), userTestWithUpdatedTimestamps).
 				Return(idTest, nil).
 				Times(1),
 			repositoryMock.EXPECT().
@@ -136,13 +167,23 @@ func TestService_UpdateUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
-		repositoryMock.EXPECT().
-			UpdateUser(gomock.Any(), userTest).
-			Return(fmt.Errorf("error")).
-			Times(1)
+		userTestWithUpdatedAt := userTest
+		userTestWithUpdatedAt.UpdatedAt = timeTest
+
+		gomock.InOrder(
+			timerMock.EXPECT().
+				Now().
+				Return(timeTest).
+				Times(1),
+			repositoryMock.EXPECT().
+				UpdateUser(gomock.Any(), userTestWithUpdatedAt).
+				Return(fmt.Errorf("error")).
+				Times(1),
+		)
 
 		_, err := service.UpdateUser(context.Background(), userTest)
 		assert.Error(t, err)
@@ -153,17 +194,27 @@ func TestService_UpdateUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
-		repositoryMock.EXPECT().
-			UpdateUser(gomock.Any(), userTest).
-			Return(nil).
-			Times(1)
+		userTestWithUpdatedAt := userTest
+		userTestWithUpdatedAt.UpdatedAt = timeTest
+
+		gomock.InOrder(
+			timerMock.EXPECT().
+				Now().
+				Return(timeTest).
+				Times(1),
+			repositoryMock.EXPECT().
+				UpdateUser(gomock.Any(), userTestWithUpdatedAt).
+				Return(nil).
+				Times(1),
+		)
 
 		user, err := service.UpdateUser(context.Background(), userTest)
 		assert.NoError(t, err)
-		assert.Equal(t, userTest, user)
+		assert.Equal(t, userTestWithUpdatedAt, user)
 	})
 }
 
@@ -173,8 +224,9 @@ func TestService_DeleteUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timer := common.NewTimer()
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timer)
 
 		repositoryMock.EXPECT().
 			DeleteUser(gomock.Any(), idTest).
@@ -190,8 +242,9 @@ func TestService_DeleteUser(t *testing.T) {
 		defer ctrl.Finish()
 
 		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock)
+		service := New(repositoryMock, timerMock)
 
 		repositoryMock.EXPECT().
 			DeleteUser(gomock.Any(), idTest).
