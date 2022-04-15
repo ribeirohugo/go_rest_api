@@ -1,6 +1,13 @@
-# Golang Startup
+# Golang Basic REST API
 
-Golang basic web application structure using an onion architecture approach.
+Golang basic REST API is a web application structure using an onion architecture approach.
+
+It implements controller, service, database layers, that makes above layers independent of which database (or any other
+bottom layer type e.g. other API downstream) type is being used.
+There are ``cmd`` implemented examples of the application, for each database type: ``mongo``, ``mysql`` and ``postgres``.
+
+It also could be a useful structure for Golang development, having model, config loading, implemented GitHub workflows,
+Makefile, that are often requirements of a Golang application.
 
 ## 1. Config
 
@@ -27,13 +34,13 @@ For a REST application with a postgres database layer use:
 go run ./cmd/postgres/main.go
 ``
 
-For an application with MySQL database layer use:
+For a REST application with MySQL database layer use:
 
 ``
 go run ./cmd/mysql/main.go
 ``
 
-For an application with MongoDB database layer use:
+For a REST application with MongoDB database layer use:
 
 ``
 go run ./cmd/mongo/main.go
