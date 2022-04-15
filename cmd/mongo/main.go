@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/ribeirohugo/golang_startup/internal/common"
 	"log"
 
+	"github.com/ribeirohugo/golang_startup/internal/common"
 	"github.com/ribeirohugo/golang_startup/internal/config"
 	"github.com/ribeirohugo/golang_startup/internal/controller"
 	"github.com/ribeirohugo/golang_startup/internal/database/mongodb"

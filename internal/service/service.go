@@ -19,7 +19,7 @@ type Repository interface {
 	DeleteUser(ctx context.Context, id string) error
 }
 
-// Time defines the time provider operations.
+// Timer abstraction layer for time operations.
 type Timer interface {
 	Now() time.Time
 }

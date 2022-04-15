@@ -3,7 +3,7 @@ package common
 
 import "time"
 
-// Provider - time provider struct
+// Timer - timer basic struct
 type Timer struct{}
 
 // NewTimer - instantiates a new timer
