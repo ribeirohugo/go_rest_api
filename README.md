@@ -27,7 +27,13 @@ For a REST application with a postgres database layer use:
 go run ./cmd/postgres/main.go
 ``
 
-For a mongoDB database layer use:
+For an application with MySQL database layer use:
+
+``
+go run ./cmd/mysql/main.go
+``
+
+For an application with MongoDB database layer use:
 
 ``
 go run ./cmd/mongo/main.go
