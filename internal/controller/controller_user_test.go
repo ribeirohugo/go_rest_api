@@ -20,7 +20,8 @@ const (
 	emailTest = "email@domain"
 	nameTest  = "Test"
 
-	jsonOutput = "{\"id\":\"00000000-0000-0000-0000-000000000000\",\"name\":\"Test\",\"email\":\"email@domain\"}\n"
+	jsonOutput = "{\"id\":\"00000000-0000-0000-0000-000000000000\",\"name\":\"Test\"," +
+		"\"email\":\"email@domain\",\"createdAt\":\"0001-01-01T00:00:00Z\",\"updatedAt\":\"0001-01-01T00:00:00Z\"}\n"
 )
 
 var testUser = model.User{
