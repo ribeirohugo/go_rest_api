@@ -3,8 +3,8 @@ default: build
 .PHONY: lint
 # analysis linting based on defined linting rules
 lint:
-	command -v golangci-lint || curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ${GOPATH}/bin latest
-	golangci-lint run --fix
+	command -v golangci-lint || curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ${GOPATH}/bin latest
+	golangci-lint run ./... -v
 
 .PHONY: run
 # runs mongo application
