@@ -16,7 +16,7 @@ const baseNumber = 10
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	row := db.client.QueryRowContext(ctx, `
 		SELECT id, username, email
-		FROM users WHERE id = $1
+		FROM users WHERE id = ?
 		LIMIT 1
 	`, id)
 
@@ -40,9 +40,9 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 	err := db.client.QueryRowContext(ctx, `
 		UPDATE users 
-		SET username = $2, email = $3
-		WHERE id = $1
-	`, user.ID, user.Name, user.Email).Err()
+		SET username = ?, email = ?
+		WHERE id = ?
+	`, user.Name, user.Email, user.ID).Err()
 	if err != nil {
 		return err
 	}
@@ -54,7 +54,7 @@ func (db *Database) UpdateUser(ctx context.Context, user model.User) error {
 func (db *Database) CreateUser(ctx context.Context, user model.User) (string, error) {
 	res, err := db.client.ExecContext(ctx, `
 		INSERT INTO users (username, email)
-		VALUES ($1, $2)
+		VALUES (?, ?)
 	`, user.Name, user.Email)
 	if err != nil {
 		return "", fmt.Errorf("error creating user: %s", err.Error())
@@ -74,7 +74,7 @@ func (db *Database) CreateUser(ctx context.Context, user model.User) (string, er
 func (db *Database) DeleteUser(ctx context.Context, id string) error {
 	err := db.client.QueryRowContext(ctx, `
 		DELETE FROM users
-		WHERE id = $1
+		WHERE id = ?
 	`, id).Err()
 	if err != nil {
 		return err
