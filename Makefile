@@ -55,3 +55,7 @@ test-coverage:
 # runs integration tests
 test-integration:
 	go test ./... -tags=integration ./...
+
+# clears generated mocks
+clear-mock:
+	find . -iname '*_mock.go' -exec rm {} \;
