@@ -45,3 +45,27 @@ For a REST application with MongoDB database layer use:
 ``
 go run ./cmd/mongo/main.go
 ``
+
+## 3. Swagger specifications
+
+
+### 3.1. Install swagger in Unix
+
+In order to install ``swagger`` binary in a Debian Linux distribution, use the following code:
+
+```
+sudo apt update
+sudo apt install -y apt-transport-https gnupg curl
+curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | sudo apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/config.deb.txt?distro=debian&codename=any-version' | sudo tee /etc/apt/sources.list.d/go-swagger-go-swagger.list
+sudo apt update 
+sudo apt install swagger
+```
+
+Source: 🔗 [Go Swagger](https://goswagger.io/install.html)
+
+## 3.2. Run swagger command in Windows
+
+If you're using windows use the following command before swagger code:
+
+``docker run --rm -it --env GOPATH=/go -v %CD%:/go/src -w /go/src quay.io/goswagger/swagger <swagger code here>``
