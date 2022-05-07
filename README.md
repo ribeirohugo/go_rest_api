@@ -54,28 +54,12 @@ API specs could be find in ``openapi.yml`` file.
 
 To generate Swagger spec in Unix run te following command:
 
-``swagger generate spec -o ./swagger.yml``
-
-Generate swagger spec with models.
-
 ``swagger generate spec -o ./swagger.yml --scan-models``
 
 If you're using windows use the following command before swagger code:
 
 ``docker run --rm -it --env GOPATH=/go -v %CD%:/go/src -w /go/src quay.io/goswagger/swagger <swagger code here>``
 
-
-### 3.2. Install swagger in Unix
-
-In order to install ``swagger`` binary in a Debian Linux distribution, use the following code:
-
-```
-sudo apt update
-sudo apt install -y apt-transport-https gnupg curl
-curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/gpg.2F8CB673971B5C9E.key' | sudo apt-key add -
-curl -1sLf 'https://dl.cloudsmith.io/public/go-swagger/go-swagger/config.deb.txt?distro=debian&codename=any-version' | sudo tee /etc/apt/sources.list.d/go-swagger-go-swagger.list
-sudo apt update 
-sudo apt install swagger
-```
+For information about Swagger installation, check this:
 
 Source: 🔗 [Go Swagger](https://goswagger.io/install.html)
