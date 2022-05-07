@@ -46,10 +46,26 @@ For a REST application with MongoDB database layer use:
 go run ./cmd/mongo/main.go
 ``
 
-## 3. Swagger specifications
+## 3. API specifications
+
+API specs could be find in ``openapi.yml`` file.
+
+### 3.1. Swagger commands
+
+To generate Swagger spec in Unix run te following command:
+
+``swagger generate spec -o ./swagger.yml``
+
+Generate swagger spec with models.
+
+``swagger generate spec -o ./swagger.yml --scan-models``
+
+If you're using windows use the following command before swagger code:
+
+``docker run --rm -it --env GOPATH=/go -v %CD%:/go/src -w /go/src quay.io/goswagger/swagger <swagger code here>``
 
 
-### 3.1. Install swagger in Unix
+### 3.2. Install swagger in Unix
 
 In order to install ``swagger`` binary in a Debian Linux distribution, use the following code:
 
@@ -63,9 +79,3 @@ sudo apt install swagger
 ```
 
 Source: 🔗 [Go Swagger](https://goswagger.io/install.html)
-
-## 3.2. Run swagger command in Windows
-
-If you're using windows use the following command before swagger code:
-
-``docker run --rm -it --env GOPATH=/go -v %CD%:/go/src -w /go/src quay.io/goswagger/swagger <swagger code here>``
