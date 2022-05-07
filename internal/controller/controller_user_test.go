@@ -132,7 +132,7 @@ func TestServer_CreateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
