@@ -34,17 +34,17 @@ paths:
               schema:
                 type: string
     delete:
-      summary: Removes an existing User.
+      summary: Removes an existing User for a given ID.
       parameters:
         - in: path
           name: userId
           schema:
             type: string
           required: true
-          description: ID value of the user to update
+          description: ID value of the user to be removed
       responses:
         '200':
-          description: The updated user object
+          description: User was successfully removed
           content:
             application/json:
               schema:
@@ -56,7 +56,7 @@ paths:
               schema:
                 type: string
         '500':
-          description: An internal server error ocurred processing the request
+          description: An internal server error occurred processing the request
           content:
             application/json:
               schema:
@@ -65,7 +65,7 @@ paths:
     put:
       summary: Updates an existing User.
       requestBody:
-        description: User object data
+        description: User update request object data
         required: true
         content:
           application/json:
@@ -73,7 +73,7 @@ paths:
               $ref: "#/components/schemas/User"
       responses:
         '200':
-          description: The updated user object
+          description: Returns the updated user object
           content:
             application/json:
               schema:
@@ -85,7 +85,7 @@ paths:
               schema:
                 type: string
         '500':
-          description: An internal server error ocurred processing the request
+          description: An internal server error occurred processing the request
           content:
             application/json:
               schema:
@@ -94,7 +94,7 @@ paths:
     post:
       summary: Creates a new User.
       requestBody:
-        description: User object data
+        description: User request object data
         required: true
         content:
           application/json:
