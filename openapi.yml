@@ -90,7 +90,6 @@ paths:
             application/json:
               schema:
                 type: string
-  /users:
     post:
       summary: Creates a new User.
       requestBody:

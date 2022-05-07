@@ -104,7 +104,7 @@ func TestServer_CreateUser(t *testing.T) {
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/users", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
 
 		reader := bytes.NewReader(buf.Bytes())
 
