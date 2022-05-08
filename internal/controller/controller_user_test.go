@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ribeirohugo/golang_startup/internal/model/request"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
