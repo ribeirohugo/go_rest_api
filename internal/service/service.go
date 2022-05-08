@@ -6,10 +6,10 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/ribeirohugo/golang_startup/internal/model/request"
 	"time"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 )
 
 // Repository abstracts the data access layer.
