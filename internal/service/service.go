@@ -68,7 +68,7 @@ func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, 
 }
 
 // UpdateUser - Updates an existing user. It returns the updated user or returns an error if anything fails.
-func (s *Service) UpdateUser(ctx context.Context, user model.User) (model.User, error) {
+func (s *Service) UpdateUser(ctx context.Context, id string, user model.User) (model.User, error) {
 	user.UpdatedAt = s.timer.Now()
 
 	err := s.repo.UpdateUser(ctx, user)

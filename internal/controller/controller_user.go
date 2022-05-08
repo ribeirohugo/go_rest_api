@@ -69,6 +69,9 @@ func (c *Controller) NewUser(w http.ResponseWriter, r *http.Request) {
 // Requires the user ID to update and a user data JSON body.
 // Returns the updated user or an error in case of failure.
 func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID := vars["id"]
+
 	var user model.User
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -76,7 +79,7 @@ func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	updatedUser, err := c.service.UpdateUser(context.Background(), user)
+	updatedUser, err := c.service.UpdateUser(context.Background(), userID, user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

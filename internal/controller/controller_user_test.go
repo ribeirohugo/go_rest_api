@@ -162,12 +162,12 @@ func TestServer_UpdateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), testUser).
+			UpdateUser(gomock.Any(), idTest, testUser).
 			Return(testUser, nil).
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -188,14 +188,14 @@ func TestServer_UpdateUser(t *testing.T) {
 		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), testUser).
+			UpdateUser(gomock.Any(), idTest, testUser).
 			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		reader := bytes.NewReader(buf.Bytes())
 
