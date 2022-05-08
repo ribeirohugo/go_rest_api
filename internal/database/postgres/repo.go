@@ -73,3 +73,9 @@ func (db *Database) DeleteUser(ctx context.Context, id string) error {
 
 	return nil
 }
+
+// FindAllUsers - Returns all users for a given limit and offset
+func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error) {
+	// TODO
+	panic("Not implemented yet")
+}

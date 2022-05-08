@@ -74,7 +74,7 @@ func (db *Database) DeleteUser(ctx context.Context, id string) error {
 }
 
 // FindAllUsers - Returns all users for a given limit and offset
-func (db *Database) FindAllUsers(ctx context.Context, limit int64, offset int64) ([]model.User, error) {
+func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error) {
 	var users []model.User
 
 	collection := db.client.Database(db.database).Collection(userCollection)
