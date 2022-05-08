@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
 
@@ -15,8 +16,10 @@ func (db *Database) FindUser(ctx context.Context, id string) (model.User, error)
 		LIMIT 1
 	`, id)
 
-	var uid, name, email sql.NullString
-	var created, updated sql.NullTime
+	var (
+		uid, name, email sql.NullString
+		created, updated sql.NullTime
+	)
 
 	err := row.Scan(&uid, &name, &email, &created, &updated)
 	if err != nil {
@@ -88,9 +91,11 @@ func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64)
 		return []model.User{}, fmt.Errorf("error executing query: %s", err.Error())
 	}
 
-	var uid, name, email sql.NullString
-	var created, updated sql.NullTime
-	var users []model.User
+	var (
+		uid, name, email sql.NullString
+		created, updated sql.NullTime
+		users            []model.User
+	)
 
 	for rows.Next() {
 		err = rows.Scan(&uid, &name, &email, &created, &updated)

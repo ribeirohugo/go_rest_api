@@ -111,9 +111,10 @@ func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64)
 		return []model.User{}, fmt.Errorf("error executing query: %s", err.Error())
 	}
 
-	var uid, name, email, created, updated sql.NullString
-
-	var users []model.User
+	var (
+		uid, name, email, created, updated sql.NullString
+		users                              []model.User
+	)
 
 	for rows.Next() {
 		err = rows.Scan(&uid, &name, &email, &created, &updated)
