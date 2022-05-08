@@ -76,7 +76,7 @@ paths:
       - Users
   /user/{userId}:
     get:
-      operationId: getUsers
+      operationId: getUser
       parameters:
       - description: user ID to get information
         in: path
@@ -127,6 +127,35 @@ paths:
       - apiKey:
         - '[]'
       summary: Updates an existing User.
+      tags:
+      - Users
+  /users:
+    get:
+      operationId: findUsers
+      parameters:
+      - description: Limit user list size to get. Should be 20 or less and positive
+          number.
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Offset value to get user list. Should be a positive number.
+        in: query
+        name: offset
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/Returns'
+          description: user list
+        "400":
+          description: ""
+        "500":
+          description: ""
+      security:
+      - apiKey:
+        - '[]'
+      summary: Returns all users with pagination.
       tags:
       - Users
 swagger: "2.0"
