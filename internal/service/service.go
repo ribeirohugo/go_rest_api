@@ -91,8 +91,10 @@ func (s *Service) DeleteUser(ctx context.Context, id string) error {
 
 // FindAllUsers - Returns all users, for a given limit and offset
 func (s *Service) FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error) {
-	const maxLimit int64 = 20
-	const minOffset int64 = 0
+	const (
+		maxLimit  int64 = 20
+		minOffset int64 = 0
+	)
 
 	finalLimit := limit
 	if finalLimit > maxLimit {
