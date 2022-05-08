@@ -20,22 +20,34 @@ const (
 // FindUser - Returns a user for a given ID or an error if anything fails
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
 	row := db.client.QueryRowContext(ctx, `
-		SELECT id, username, email
+		SELECT id, username, email, created, updated
 		FROM users WHERE id = ?
 		LIMIT 1
 	`, id)
 
-	var uid, name, email sql.NullString
+	var uid, name, email, created, updated sql.NullString
 
-	err := row.Scan(&uid, &name, &email)
+	err := row.Scan(&uid, &name, &email, &created, &updated)
 	if err != nil {
 		return model.User{}, err
 	}
 
+	createdTime, err := time.Parse(timeLayout, created.String)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	updatedTime, err := time.Parse(timeLayout, updated.String)
+	if err != nil {
+		return model.User{}, fmt.Errorf("error parsing time layout: %s", err.Error())
+	}
+
 	user := model.User{
-		ID:    uid.String,
-		Name:  name.String,
-		Email: email.String,
+		ID:        uid.String,
+		Name:      name.String,
+		Email:     email.String,
+		CreatedAt: createdTime,
+		UpdatedAt: updatedTime,
 	}
 
 	return user, nil
@@ -96,7 +108,7 @@ func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64)
 		LIMIT ?
 	`, limit)
 	if err != nil {
-		return []model.User{}, fmt.Errorf("error executing MySQL query: %s", err.Error())
+		return []model.User{}, fmt.Errorf("error executing query: %s", err.Error())
 	}
 
 	var uid, name, email, created, updated sql.NullString

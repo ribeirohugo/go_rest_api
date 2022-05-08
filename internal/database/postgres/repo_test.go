@@ -46,6 +46,18 @@ func TestDatabase_CreateUser_FindUser(t *testing.T) {
 	assert.Equal(t, testEmail, user.Email)
 	assert.Equal(t, testName, user.Name)
 
+	// FindAll
+	users2, err := databaseForTest.FindAllUsers(context.Background(), 0, 20)
+	require.NoError(t, err)
+
+	assert.Len(t, users2, 1)
+
+	users2, err = databaseForTest.FindAllUsers(context.Background(), 1, 0)
+	require.NoError(t, err)
+
+	assert.Empty(t, users2)
+
+	// UpdateUser
 	user.Name = testNameUpdate
 	user.Email = testEmailUpdate
 
@@ -58,6 +70,7 @@ func TestDatabase_CreateUser_FindUser(t *testing.T) {
 	assert.Equal(t, testNameUpdate, updatedUser.Name)
 	assert.Equal(t, testEmailUpdate, updatedUser.Email)
 
+	// DeleteUser
 	err = databaseForTest.DeleteUser(context.Background(), userID)
 	require.NoError(t, err)
 
