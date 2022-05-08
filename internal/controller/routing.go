@@ -94,4 +94,6 @@ func (c *Controller) routing() {
 	//	500:
 	//   description: An internal server error occurred processing the request
 	c.mux.HandleFunc("/user/{id}", c.DeleteUser).Methods(http.MethodDelete)
+
+	c.mux.HandleFunc("/users", c.FindUsers).Methods(http.MethodGet)
 }
