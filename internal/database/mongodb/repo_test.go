@@ -4,7 +4,6 @@ package mongodb
 
 import (
 	"context"
-	"log"
 	"testing"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
@@ -35,6 +34,7 @@ func TestDatabase_CRUD(t *testing.T) {
 
 	databaseForTest := buildClient(t, container)
 
+	// Create User
 	userID, err := databaseForTest.CreateUser(context.Background(), testUser)
 	require.NoError(t, err)
 
@@ -44,6 +44,7 @@ func TestDatabase_CRUD(t *testing.T) {
 	assert.Equal(t, testEmail, user.Email)
 	assert.Equal(t, testName, user.Name)
 
+	// Update
 	user.Name = testNameUpdate
 	user.Email = testEmailUpdate
 
@@ -56,12 +57,22 @@ func TestDatabase_CRUD(t *testing.T) {
 	assert.Equal(t, testNameUpdate, updatedUser.Name)
 	assert.Equal(t, testEmailUpdate, updatedUser.Email)
 
+	// FindAll
+	users2, err := databaseForTest.FindAllUsers(context.Background(), 0, 20)
+	require.NoError(t, err)
+
+	assert.Len(t, users2, 1)
+
+	users2, err = databaseForTest.FindAllUsers(context.Background(), 1, 0)
+	require.NoError(t, err)
+
+	assert.Empty(t, users2)
+
+	// Delete
 	err = databaseForTest.DeleteUser(context.Background(), userID)
 	require.NoError(t, err)
 
 	user, err = databaseForTest.FindUser(context.Background(), userID)
-
-	log.Println(user)
 
 	require.Error(t, err)
 }

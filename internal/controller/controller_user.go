@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
 
@@ -110,4 +111,53 @@ func (c *Controller) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+}
+
+// FindUsers - Gets all users using pagination
+// Optionally should be sent offset or limit pagination values.
+// Returns OK or an error in case of failure.
+func (c *Controller) FindUsers(w http.ResponseWriter, r *http.Request) {
+	offset, limit, err := getPaginationValues(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	users, err := c.service.FindAllUsers(context.Background(), offset, limit)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", jsonContentType)
+
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func getPaginationValues(r *http.Request) (int64, int64, error) {
+	const (
+		emptyValue int64 = 0
+
+		base    = 10
+		bitSize = 64
+	)
+
+	rawOffset := r.URL.Query().Get("offset")
+	rawLimit := r.URL.Query().Get("limit")
+
+	offset, err := strconv.ParseInt(rawOffset, base, bitSize)
+	if err != nil {
+		return emptyValue, emptyValue, err
+	}
+
+	limit, err := strconv.ParseInt(rawLimit, base, bitSize)
+	if err != nil {
+		return emptyValue, emptyValue, err
+	}
+
+	return offset, limit, nil
 }

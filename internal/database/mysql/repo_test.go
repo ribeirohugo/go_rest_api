@@ -46,6 +46,17 @@ func TestDatabase_CRUD(t *testing.T) {
 	user.Name = testNameUpdate
 	user.Email = testEmailUpdate
 
+	// FindAll
+	users2, err := databaseForTest.FindAllUsers(context.Background(), 0, 20)
+	require.NoError(t, err)
+
+	assert.Len(t, users2, 1)
+
+	users2, err = databaseForTest.FindAllUsers(context.Background(), 1, 0)
+	require.NoError(t, err)
+
+	assert.Empty(t, users2)
+
 	err = databaseForTest.UpdateUser(context.Background(), user)
 	require.NoError(t, err)
 

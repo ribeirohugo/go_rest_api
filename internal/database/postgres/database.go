@@ -21,7 +21,7 @@ const (
 
 // Database - PostgreSQL database struct
 type Database struct {
-	sql *sql.DB
+	client *sql.DB
 }
 
 // New creates a new PostgreSQL database struct
@@ -36,7 +36,7 @@ func New(address string) (*Database, error) {
 		return &Database{}, fmt.Errorf("error pinging database connection: %s", err.Error())
 	}
 
-	return &Database{sql: db}, nil
+	return &Database{client: db}, nil
 }
 
 // Migrate - Runs a database migration for a given database and migrations path with the SQL files
@@ -48,7 +48,7 @@ func (db *Database) Migrate(databaseName string, migrationsPath string) error {
 		DatabaseName:    databaseName,
 	}
 
-	driver, err := postgresMigration.WithInstance(db.sql, &postgresConfig)
+	driver, err := postgresMigration.WithInstance(db.client, &postgresConfig)
 	if err != nil {
 		return err
 	}

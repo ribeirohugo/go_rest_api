@@ -17,6 +17,7 @@ type Service interface {
 	CreateUser(ctx context.Context, user model.User) (model.User, error)
 	UpdateUser(ctx context.Context, user model.User) (model.User, error)
 	DeleteUser(ctx context.Context, id string) error
+	FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error)
 }
 
 // Controller - controller related struct

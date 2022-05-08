@@ -17,6 +17,9 @@ const (
 	idTest    = "00000000-0000-0000-0000-000000000000"
 	emailTest = "email@domain"
 	nameTest  = "Test"
+
+	testOffset int64 = 0
+	testLimit  int64 = 20
 )
 
 var (
@@ -253,5 +256,47 @@ func TestService_DeleteUser(t *testing.T) {
 
 		err := service.DeleteUser(context.Background(), idTest)
 		assert.NoError(t, err)
+	})
+}
+
+func TestService_FindAllUsers(t *testing.T) {
+	t.Run("Returns an error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repositoryMock := NewMockRepository(ctrl)
+		timer := common.NewTimer()
+
+		service := New(repositoryMock, timer)
+
+		repositoryMock.EXPECT().
+			FindAllUsers(gomock.Any(), testOffset, testLimit).
+			Return([]model.User{}, fmt.Errorf("error")).
+			Times(1)
+
+		users, err := service.FindAllUsers(context.Background(), testOffset, testLimit)
+		assert.Error(t, err)
+		assert.Empty(t, users)
+	})
+
+	t.Run("Returns no error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		testUsers := []model.User{userTest, userTest}
+
+		repositoryMock := NewMockRepository(ctrl)
+		timerMock := NewMockTimer(ctrl)
+
+		service := New(repositoryMock, timerMock)
+
+		repositoryMock.EXPECT().
+			FindAllUsers(gomock.Any(), testOffset, testLimit).
+			Return(testUsers, nil).
+			Times(1)
+
+		users, err := service.FindAllUsers(context.Background(), testOffset, testLimit)
+		assert.NoError(t, err)
+		assert.Len(t, users, 2)
 	})
 }

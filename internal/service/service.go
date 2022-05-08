@@ -17,6 +17,7 @@ type Repository interface {
 	CreateUser(ctx context.Context, user model.User) (string, error)
 	UpdateUser(ctx context.Context, user model.User) error
 	DeleteUser(ctx context.Context, id string) error
+	FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error)
 }
 
 // Timer abstraction layer for time operations.
@@ -86,4 +87,29 @@ func (s *Service) DeleteUser(ctx context.Context, id string) error {
 	}
 
 	return nil
+}
+
+// FindAllUsers - Returns all users, for a given limit and offset
+func (s *Service) FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error) {
+	const (
+		maxLimit  int64 = 20
+		minOffset int64 = 0
+	)
+
+	finalLimit := limit
+	if finalLimit > maxLimit {
+		finalLimit = maxLimit
+	}
+
+	finalOffset := offset
+	if finalOffset < minOffset {
+		finalOffset = minOffset
+	}
+
+	users, err := s.repo.FindAllUsers(ctx, finalOffset, finalLimit)
+	if err != nil {
+		return []model.User{}, fmt.Errorf("fail to get users: %v", err)
+	}
+
+	return users, nil
 }

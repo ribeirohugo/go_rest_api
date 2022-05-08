@@ -208,8 +208,17 @@ func TestServer_UpdateUser(t *testing.T) {
 	})
 }
 
-func TestServer_DeleteUser(t *testing.T) {
-	t.Run("Delete user successfully", func(t *testing.T) {
+func TestServer_FindUsers(t *testing.T) {
+	testUsers := []model.User{
+		testUser, testUser,
+	}
+
+	const (
+		testLimit  int64 = 20
+		testOffset int64 = 0
+	)
+
+	t.Run("Find all users successfully", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -218,44 +227,66 @@ func TestServer_DeleteUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			DeleteUser(gomock.Any(), idTest).
-			Return(nil).
+			FindAllUsers(gomock.Any(), testOffset, testLimit).
+			Return(testUsers, nil).
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
+		serverURL := fmt.Sprintf("%s/users?offset=%d&limit=%d", serverReturn.URL, testOffset, testLimit)
 
-		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
+		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
 
 		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusOK, w.Code)
 
-		assert.Contains(t, w.Body.String(), userDeletedMessage)
+		jsonUsers, err := json.Marshal(testUsers)
+		require.NoError(t, err)
+
+		assert.Contains(t, w.Body.String(), string(jsonUsers))
 	})
 
-	t.Run("Error deleting user", func(t *testing.T) {
+	t.Run("Error fetching all users", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
-			DeleteUser(gomock.Any(), idTest).
-			Return(fmt.Errorf("error")).
+			FindAllUsers(gomock.Any(), testOffset, testLimit).
+			Return([]model.User{}, fmt.Errorf("error")).
 			Times(1)
 
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
+		serverURL := fmt.Sprintf("%s/users?offset=%d&limit=%d", serverReturn.URL, testOffset, testLimit)
 
-		r, _ := http.NewRequest(http.MethodDelete, serverURL, nil)
+		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
 		w := httptest.NewRecorder()
 
 		serverTest.mux.ServeHTTP(w, r)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
+	})
+
+	t.Run("Error bad request", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockService := NewMockService(ctrl)
+
+		serverTest := New(mockService)
+
+		serverReturn := httptest.NewServer(serverTest.mux)
+		serverURL := fmt.Sprintf("%s/users?offset=%d&limit=sasasa", serverReturn.URL, testOffset)
+
+		r, _ := http.NewRequest(http.MethodGet, serverURL, nil)
+		w := httptest.NewRecorder()
+
+		serverTest.mux.ServeHTTP(w, r)
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 }

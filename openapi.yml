@@ -120,6 +120,43 @@ paths:
             application/json:
               schema:
                 type: string
+  /users:
+    get:
+      summary: Returns all users with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: true
+          description: Limit user list size to get. Should be 20 or less and positive number.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: true
+          description: Offset value to get user list. Should be a positive number.
+      responses:
+        '200':
+          description: Returns a user object
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: If limit or offset values are not numbers or are empty
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: An internal server error ocurred processing the request
+          content:
+            application/json:
+              schema:
+                type: string
 
 components:
   schemas:
