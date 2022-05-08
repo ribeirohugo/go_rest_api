@@ -8,6 +8,7 @@ import (
 
 	"github.com/ribeirohugo/golang_startup/internal/common"
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -165,31 +166,73 @@ func TestService_CreateUser(t *testing.T) {
 }
 
 func TestService_UpdateUser(t *testing.T) {
+	const (
+		emailUpdate = "email update"
+		nameUpdate  = "name update"
+	)
+
+	var (
+		userUpdateRequest = request.UserUpdate{
+			Name:  nameUpdate,
+			Email: emailUpdate,
+		}
+		expectedUserUpdated = model.User{
+			ID:        idTest,
+			Name:      nameUpdate,
+			Email:     emailUpdate,
+			UpdatedAt: timeTest,
+		}
+	)
+
 	t.Run("Returns an error", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+		t.Run("in FindUser repo", func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-		repositoryMock := NewMockRepository(ctrl)
-		timerMock := NewMockTimer(ctrl)
+			repositoryMock := NewMockRepository(ctrl)
+			timerMock := NewMockTimer(ctrl)
 
-		service := New(repositoryMock, timerMock)
+			service := New(repositoryMock, timerMock)
 
-		userTestWithUpdatedAt := userTest
-		userTestWithUpdatedAt.UpdatedAt = timeTest
-
-		gomock.InOrder(
-			timerMock.EXPECT().
-				Now().
-				Return(timeTest).
-				Times(1),
 			repositoryMock.EXPECT().
-				UpdateUser(gomock.Any(), userTestWithUpdatedAt).
-				Return(fmt.Errorf("error")).
-				Times(1),
-		)
+				FindUser(gomock.Any(), idTest).
+				Return(model.User{}, fmt.Errorf("error")).
+				Times(1)
 
-		_, err := service.UpdateUser(context.Background(), userTest)
-		assert.Error(t, err)
+			user, err := service.UpdateUser(context.Background(), idTest, userUpdateRequest)
+			assert.Error(t, err)
+
+			assert.Equal(t, model.User{}, user)
+		})
+		t.Run("in UpdateUser repo", func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			repositoryMock := NewMockRepository(ctrl)
+			timerMock := NewMockTimer(ctrl)
+
+			service := New(repositoryMock, timerMock)
+
+			gomock.InOrder(
+				repositoryMock.EXPECT().
+					FindUser(gomock.Any(), idTest).
+					Return(userTest, nil).
+					Times(1),
+				timerMock.EXPECT().
+					Now().
+					Return(timeTest).
+					Times(1),
+				repositoryMock.EXPECT().
+					UpdateUser(gomock.Any(), expectedUserUpdated).
+					Return(fmt.Errorf("error")).
+					Times(1),
+			)
+
+			user, err := service.UpdateUser(context.Background(), idTest, userUpdateRequest)
+			assert.Error(t, err)
+
+			assert.Equal(t, model.User{}, user)
+		})
 	})
 
 	t.Run("Returns no error", func(t *testing.T) {
@@ -198,26 +241,26 @@ func TestService_UpdateUser(t *testing.T) {
 
 		repositoryMock := NewMockRepository(ctrl)
 		timerMock := NewMockTimer(ctrl)
-
 		service := New(repositoryMock, timerMock)
 
-		userTestWithUpdatedAt := userTest
-		userTestWithUpdatedAt.UpdatedAt = timeTest
-
 		gomock.InOrder(
+			repositoryMock.EXPECT().
+				FindUser(gomock.Any(), idTest).
+				Return(userTest, nil).
+				Times(1),
 			timerMock.EXPECT().
 				Now().
 				Return(timeTest).
 				Times(1),
 			repositoryMock.EXPECT().
-				UpdateUser(gomock.Any(), userTestWithUpdatedAt).
+				UpdateUser(gomock.Any(), expectedUserUpdated).
 				Return(nil).
 				Times(1),
 		)
 
-		user, err := service.UpdateUser(context.Background(), userTest)
+		user, err := service.UpdateUser(context.Background(), idTest, userUpdateRequest)
 		assert.NoError(t, err)
-		assert.Equal(t, userTestWithUpdatedAt, user)
+		assert.Equal(t, expectedUserUpdated, user)
 	})
 }
 

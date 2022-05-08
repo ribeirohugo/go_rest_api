@@ -6,6 +6,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 	"time"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
@@ -68,10 +69,17 @@ func (s *Service) CreateUser(ctx context.Context, user model.User) (model.User, 
 }
 
 // UpdateUser - Updates an existing user. It returns the updated user or returns an error if anything fails.
-func (s *Service) UpdateUser(ctx context.Context, id string, user model.User) (model.User, error) {
+func (s *Service) UpdateUser(ctx context.Context, id string, userUpdate request.UserUpdate) (model.User, error) {
+	user, err := s.repo.FindUser(ctx, id)
+	if err != nil {
+		return model.User{}, fmt.Errorf("fail updating user: %v", err)
+	}
+
+	user.Name = userUpdate.Name
+	user.Email = userUpdate.Email
 	user.UpdatedAt = s.timer.Now()
 
-	err := s.repo.UpdateUser(ctx, user)
+	err = s.repo.UpdateUser(ctx, user)
 	if err != nil {
 		return model.User{}, fmt.Errorf("fail updating user: %v", err)
 	}
