@@ -141,8 +141,9 @@ func (c *Controller) FindUsers(w http.ResponseWriter, r *http.Request) {
 func getPaginationValues(r *http.Request) (int64, int64, error) {
 	const (
 		emptyValue int64 = 0
-		base             = 10
-		bitSize          = 64
+
+		base    = 10
+		bitSize = 64
 	)
 
 	rawOffset := r.URL.Query().Get("offset")
