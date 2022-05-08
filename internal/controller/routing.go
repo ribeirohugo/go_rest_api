@@ -61,7 +61,7 @@ func (c *Controller) routing() {
 	//     in: body
 	//     description: User update request object data
 	//     required: true
-	//     type: User
+	//     type: UserUpdate
 	//
 	// security:
 	// - apiKey: []

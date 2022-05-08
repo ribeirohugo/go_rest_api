@@ -21,6 +21,17 @@ definitions:
         x-go-name: UpdatedAt
     type: object
     x-go-package: github.com/ribeirohugo/golang_startup/internal/model
+  UserUpdate:
+    description: UserUpdate - request model for a user update
+    properties:
+      email:
+        type: string
+        x-go-name: Email
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/ribeirohugo/golang_startup/internal/model/request
 paths:
   /user:
     post:
@@ -111,7 +122,7 @@ paths:
         name: userUpdateRequest
         required: true
         schema:
-          $ref: '#/definitions/User'
+          $ref: '#/definitions/UserUpdate'
           description: User update request object data
           type: object
       responses:
