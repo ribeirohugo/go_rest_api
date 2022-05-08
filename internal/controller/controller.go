@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/gorilla/mux"
 )
@@ -15,7 +16,7 @@ import (
 type Service interface {
 	FindUser(ctx context.Context, id string) (model.User, error)
 	CreateUser(ctx context.Context, user model.User) (model.User, error)
-	UpdateUser(ctx context.Context, user model.User) (model.User, error)
+	UpdateUser(ctx context.Context, id string, userUpdate request.UserUpdate) (model.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error)
 }

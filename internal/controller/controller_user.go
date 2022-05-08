@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/gorilla/mux"
 )
@@ -69,14 +70,17 @@ func (c *Controller) NewUser(w http.ResponseWriter, r *http.Request) {
 // Requires the user ID to update and a user data JSON body.
 // Returns the updated user or an error in case of failure.
 func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	var user model.User
+	vars := mux.Vars(r)
+	userID := vars["id"]
+
+	var user request.UserUpdate
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	updatedUser, err := c.service.UpdateUser(context.Background(), user)
+	updatedUser, err := c.service.UpdateUser(context.Background(), userID, user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

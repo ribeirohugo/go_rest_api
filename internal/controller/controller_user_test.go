@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -146,7 +147,14 @@ func TestServer_CreateUser(t *testing.T) {
 }
 
 func TestServer_UpdateUser(t *testing.T) {
-	var buf bytes.Buffer
+	var (
+		buf bytes.Buffer
+
+		updateUser = request.UserUpdate{
+			Name:  nameTest,
+			Email: emailTest,
+		}
+	)
 
 	err := json.NewEncoder(&buf).Encode(testUser)
 	if err != nil {
@@ -162,12 +170,12 @@ func TestServer_UpdateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), testUser).
+			UpdateUser(gomock.Any(), idTest, updateUser).
 			Return(testUser, nil).
 			Times(1)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		reader := bytes.NewReader(buf.Bytes())
 
@@ -188,14 +196,14 @@ func TestServer_UpdateUser(t *testing.T) {
 		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), testUser).
+			UpdateUser(gomock.Any(), idTest, updateUser).
 			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
 		serverTest := New(mockService)
 
 		serverReturn := httptest.NewServer(serverTest.mux)
-		serverURL := fmt.Sprintf("%s/user", serverReturn.URL)
+		serverURL := fmt.Sprintf("%s/user/%s", serverReturn.URL, idTest)
 
 		reader := bytes.NewReader(buf.Bytes())
 

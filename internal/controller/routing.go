@@ -61,7 +61,7 @@ func (c *Controller) routing() {
 	//     in: body
 	//     description: User update request object data
 	//     required: true
-	//     type: User
+	//     type: UserUpdate
 	//
 	// security:
 	// - apiKey: []
@@ -72,7 +72,7 @@ func (c *Controller) routing() {
 	//   description: Invalid user object request
 	//	500:
 	//   description: An internal server error occurred processing the request
-	c.mux.HandleFunc("/user", c.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
+	c.mux.HandleFunc("/user/{id}", c.UpdateUser).Methods(http.MethodPut, http.MethodPatch)
 
 	// swagger:route DELETE /user/{id} Users deleteUser
 	// Removes an existing User for a given ID.
