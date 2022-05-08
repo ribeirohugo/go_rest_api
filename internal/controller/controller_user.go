@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 
 	"github.com/gorilla/mux"
 )
@@ -72,7 +73,7 @@ func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userID := vars["id"]
 
-	var user model.User
+	var user request.UserUpdate
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {

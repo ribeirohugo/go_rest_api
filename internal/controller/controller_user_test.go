@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/ribeirohugo/golang_startup/internal/model/request"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -146,7 +147,14 @@ func TestServer_CreateUser(t *testing.T) {
 }
 
 func TestServer_UpdateUser(t *testing.T) {
-	var buf bytes.Buffer
+	var (
+		buf bytes.Buffer
+
+		updateUser = request.UserUpdate{
+			Name:  nameTest,
+			Email: emailTest,
+		}
+	)
 
 	err := json.NewEncoder(&buf).Encode(testUser)
 	if err != nil {
@@ -162,7 +170,7 @@ func TestServer_UpdateUser(t *testing.T) {
 		serverTest := New(mockService)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), idTest, testUser).
+			UpdateUser(gomock.Any(), idTest, updateUser).
 			Return(testUser, nil).
 			Times(1)
 
@@ -188,7 +196,7 @@ func TestServer_UpdateUser(t *testing.T) {
 		mockService := NewMockService(ctrl)
 
 		mockService.EXPECT().
-			UpdateUser(gomock.Any(), idTest, testUser).
+			UpdateUser(gomock.Any(), idTest, updateUser).
 			Return(model.User{}, fmt.Errorf("error")).
 			Times(1)
 
