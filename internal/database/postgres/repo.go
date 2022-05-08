@@ -91,6 +91,10 @@ func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64)
 		return []model.User{}, fmt.Errorf("error executing query: %s", err.Error())
 	}
 
+	if rows.Err() != nil {
+		return []model.User{}, fmt.Errorf("rows returned an error: %s", rows.Err())
+	}
+
 	var (
 		uid, name, email sql.NullString
 		created, updated sql.NullTime
@@ -100,7 +104,7 @@ func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64)
 	for rows.Next() {
 		err = rows.Scan(&uid, &name, &email, &created, &updated)
 		if err != nil {
-			return []model.User{}, fmt.Errorf("error parsing time layout: %s", err.Error())
+			return []model.User{}, fmt.Errorf("error scanning rows: %s", err.Error())
 		}
 
 		user := model.User{
