@@ -48,7 +48,7 @@ go run ./cmd/mongo/main.go
 
 ## 3. API specifications
 
-API specs could be find in ``openapi.yml`` file.
+API specs could be find in ``openapi.yml`` and ``swagger.yml`` files.
 
 ### 3.1. Swagger commands
 
