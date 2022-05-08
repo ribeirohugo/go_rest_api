@@ -1,0 +1,132 @@
+definitions:
+  User:
+    description: User - domain model for a user
+    properties:
+      createdAt:
+        format: date-time
+        type: string
+        x-go-name: CreatedAt
+      email:
+        type: string
+        x-go-name: Email
+      id:
+        type: string
+        x-go-name: ID
+      name:
+        type: string
+        x-go-name: Name
+      updatedAt:
+        format: date-time
+        type: string
+        x-go-name: UpdatedAt
+    type: object
+    x-go-package: github.com/ribeirohugo/golang_startup/internal/model
+paths:
+  /user:
+    post:
+      operationId: newUser
+      parameters:
+      - description: user ID to get information
+        in: path
+        name: userId
+        type: string
+      - description: User request object data
+        in: body
+        name: userCreateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+          description: User request object data
+          type: object
+      responses:
+        "200":
+          description: Returns created user object.
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: ""
+        "500":
+          description: ""
+      security:
+      - apiKey:
+        - '[]'
+      summary: Creates a new User.
+      tags:
+      - Users
+  /user/{id}:
+    delete:
+      operationId: deleteUser
+      parameters:
+      - description: ID value of the user to be removed
+        in: path
+        name: userId
+        type: string
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ""
+        "500":
+          description: ""
+      security:
+      - apiKey:
+        - '[]'
+      summary: Removes an existing User for a given ID.
+      tags:
+      - Users
+  /user/{userId}:
+    get:
+      operationId: getUsers
+      parameters:
+      - description: user ID to get information
+        in: path
+        name: userId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Returns a user for a given ID.
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: ""
+        "500":
+          description: ""
+      security:
+      - apiKey:
+        - '[]'
+      summary: Returns a user for a given ID.
+      tags:
+      - Users
+    put:
+      operationId: updateUser
+      parameters:
+      - description: user ID to update
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: User update request object data
+        in: body
+        name: userUpdateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+          description: User update request object data
+          type: object
+      responses:
+        "200":
+          description: User
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: ""
+        "500":
+          description: ""
+      security:
+      - apiKey:
+        - '[]'
+      summary: Updates an existing User.
+      tags:
+      - Users
+swagger: "2.0"

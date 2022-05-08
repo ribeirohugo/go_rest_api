@@ -4,6 +4,7 @@ package model
 import "time"
 
 // User - domain model for a user
+// swagger:model User
 type User struct {
 	ID        string    `bson:"_id,omitempty" json:"id,omitempty"`
 	Name      string    `bson:"name,omitempty" json:"name,omitempty"`

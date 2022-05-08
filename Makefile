@@ -59,3 +59,8 @@ test-integration:
 # clears generated mocks
 clear-mock:
 	find . -iname '*_mock.go' -exec rm {} \;
+
+.PHONY: swagger
+# generate swagger yml specs
+swagger:
+	swagger generate spec -o ./swagger.yaml --scan-models

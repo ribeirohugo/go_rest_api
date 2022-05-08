@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Golang Basic REST API
+  description:  Golang basic REST API structure using an onion architecture approach.
+  version: 0.0.1
+paths:
+  /user/{userId}:
+    get:
+      summary: Returns a user for a given ID.
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID value of the user to get
+      responses:
+        '200':
+          description: Returns a user object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found error if there is no user for the given ID
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: An internal server error ocurred processing the request
+          content:
+            application/json:
+              schema:
+                type: string
+    delete:
+      summary: Removes an existing User for a given ID.
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID value of the user to be removed
+      responses:
+        '200':
+          description: User was successfully removed
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '404':
+          description: User not found error if there is no user for the given ID
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: An internal server error occurred processing the request
+          content:
+            application/json:
+              schema:
+                type: string
+  /user:
+    put:
+      summary: Updates an existing User.
+      requestBody:
+        description: User update request object data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: Returns the updated user object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        '400':
+          description: Invalid user object request
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: An internal server error occurred processing the request
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      summary: Creates a new User.
+      requestBody:
+        description: User request object data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid user object request
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: An internal server error ocurred processing the request
+          content:
+            application/json:
+              schema:
+                type: string
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
