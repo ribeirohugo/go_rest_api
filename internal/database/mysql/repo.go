@@ -6,11 +6,16 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/ribeirohugo/golang_startup/internal/model"
 )
 
-const baseNumber = 10
+const (
+	baseNumber = 10
+
+	timeLayout = "2006-01-02 15:04:05"
+)
 
 // FindUser - Returns a user for a given ID or an error if anything fails
 func (db *Database) FindUser(ctx context.Context, id string) (model.User, error) {
@@ -85,6 +90,45 @@ func (db *Database) DeleteUser(ctx context.Context, id string) error {
 
 // FindAllUsers - Returns all users for a given limit and offset
 func (db *Database) FindAllUsers(ctx context.Context, offset int64, limit int64) ([]model.User, error) {
-	// TODO
-	panic("Not implemented yet")
+	rows, err := db.client.QueryContext(ctx, `
+		SELECT id, username, email, created, updated
+		FROM users
+		LIMIT ?
+	`, limit)
+	if err != nil {
+		return []model.User{}, fmt.Errorf("error executing MySQL query: %s", err.Error())
+	}
+
+	var uid, name, email, created, updated sql.NullString
+
+	var users []model.User
+
+	for rows.Next() {
+		err = rows.Scan(&uid, &name, &email, &created, &updated)
+		if err != nil {
+			return []model.User{}, fmt.Errorf("error parsing time layout: %s", err.Error())
+		}
+
+		createdTime, err := time.Parse(timeLayout, created.String)
+		if err != nil {
+			return []model.User{}, err
+		}
+
+		updatedTime, err := time.Parse(timeLayout, updated.String)
+		if err != nil {
+			return []model.User{}, fmt.Errorf("error parsing time layout: %s", err.Error())
+		}
+
+		user := model.User{
+			ID:        uid.String,
+			Name:      name.String,
+			Email:     email.String,
+			CreatedAt: createdTime,
+			UpdatedAt: updatedTime,
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
 }
